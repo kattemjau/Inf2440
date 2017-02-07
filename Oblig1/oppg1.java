@@ -1,9 +1,7 @@
 import java.util.Random;
 
 
-public class oppg1{
-
-
+public class Oppg1{
   public static void main(String[] args) {
     int number =0;
     try{
@@ -17,9 +15,10 @@ public class oppg1{
     }
     int[] array = oprettArray(number);
 
-    Mintraad traad = new Mintraad(array);
-    traad.start();
-    // print(array);
+    Handler traad = new Handler();
+    array=traad.run(array);
+
+    print(array);
 
 
   }
@@ -38,12 +37,10 @@ public class oppg1{
 
   //prints the random array
   static void print(int[] array){
-    for (Integer i: array ) {
-      System.out.println(i);
+    for (int i=0; i<array.length; i++) {
+      System.out.println(array[i]);
     }
   }
-
-
 
 
 
