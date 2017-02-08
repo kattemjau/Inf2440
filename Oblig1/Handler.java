@@ -7,15 +7,15 @@ class Handler{
 
 	int[] run(int[] array){
 		try{
-			Mintraad traad = new Mintraad(array, this, 0, array.length, 100);
+			Mintraad traad = new Mintraad(array, this, 0, array.length, 10);
 			traad.start();
 			nyArray = new int[array.length];
-			System.out.println("No error");
 			barrier.await();
+			// System.out.println("No error");
 		}catch(Exception e){
 			System.out.println("error running thread");
 		}
-		
+
 		return nyArray;
 	}
 	synchronized void synkroniserArray(int[] array, int start, int slutt) {

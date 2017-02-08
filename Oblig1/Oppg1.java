@@ -18,7 +18,7 @@ public class Oppg1{
     Handler traad = new Handler();
     array=traad.run(array);
 
-    print(array);
+    // print(array);
 
 
   }
