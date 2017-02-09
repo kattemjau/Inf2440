@@ -16,7 +16,7 @@ public class Oppg1{
     int[] array = oprettArray(number);
 
     Handler traad = new Handler();
-    array=traad.run(array);
+    traad.run(array);
 
     // print(array);
 
@@ -33,13 +33,6 @@ public class Oppg1{
     }
     return array;
 
-  }
-
-  //prints the random array
-  static void print(int[] array){
-    for (int i=0; i<array.length; i++) {
-      System.out.println(array[i]);
-    }
   }
 
 
