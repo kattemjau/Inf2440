@@ -35,6 +35,7 @@ Gjennomsnitts tiden K100: 0.040365
 n = 10 000
 
 tid pa Array.sort: 17.499105
+
 Testing av instikk sortering A2
 Times per thread in order to finishing K20
 Trad[0]: 0.132805
@@ -60,7 +61,7 @@ Gjennomsnitts tiden K100: 0.04473728571428571
 
 
 n = 100 000 000
-Ram usage: 27% av 16GB ram (5000 MB)
+Ram usage: 27% av 16GB ram (~5000 MB)
 
 tid pa Array.sort: 82563.079429
 
@@ -74,6 +75,5 @@ Trad[4]: 6.091284
 Trad[5]: 6.206102
 Trad[6]: 6.130883
 Gjennomsnitts tiden K20: 5411.8594028571415
-start: 0
-slutt: 100000000
-antallPlasser: 20
+
+K=100 avbrutt etter 45 minutter. 
