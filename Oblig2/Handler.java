@@ -1,21 +1,26 @@
 import java.util.ArrayList;
 
 public class Handler{
-	ArrayList<> array = new ArrayList<>();
+	public ArrayList<Integer> array = new ArrayList<>();
 
-	handler(){
+	Handler(){
 
 	}
 	void finnPrimtall(int antPrimtall){
 		//sorterings algorithme for a finne primtall
 		// kun 2 er enseste partall som er primtall
 		// for alle oddetall, sjekk om primtall
+		System.out.println("tester for antPrimtall: " + antPrimtall);
 
 		for (int i = 3; i<antPrimtall; i+=2) {
-			System.out.print(i +" = ");
+			// System.out.print(i +" = ");
 			faktorisering(i);
-			System.out.println(" ");
+			// System.out.println(" ");
 			
+		}
+
+		for (Integer e: array) {
+			System.out.println(e);
 		}
 
 
@@ -30,22 +35,28 @@ public class Handler{
 	void faktorisering(int potensielPrim){
 		//denne skal multithreades "tar lengst tid"
 		
-		for(int i=0; i<potensielPrim; i++){
+		for(int i=2; i<potensielPrim; i++){
+			// System.out.println("factorisererer : " + i);
 			if(potensielPrim%i == 0){
-				System.out.print(potensielPrim/i);
+				// System.out.print(potensielPrim/i);
 				if(array.contains(potensielPrim/i)){
+					// System.out.print(potensielPrim);
 					return;
 				}
-				System.out.print(" * ");
+				// System.out.print(" * ");
 				faktorisering(potensielPrim/i);
 				return;
 			}
 
 		}
+		// System.out.println("DEN KJEM HIT");
 		// kommer den hit er det et primtall
 		//add primtall
+		// if(!array.contains(potensielPrim)){
 		array.add(potensielPrim);
-		System.out.print(potensielPrim);
+		// System.out.print(potensielPrim);
+
+		// }
 
 
 	}
