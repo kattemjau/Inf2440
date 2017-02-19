@@ -4,12 +4,12 @@ public class Oblig2{
 		try{
 		int antTall = Integer.parseInt(args[0]);
 		Handler hand = new Handler();
-		// System.out.println(antTall);
 
 		hand.eratosthenesSil(antTall);
 		hand.finnPrimtall(antTall);
 
-
+		hand.finnParralellPrimtall(antTall);		
+		hand.printResult();
 			
 		}catch (Exception e){
 			e.printStackTrace();
