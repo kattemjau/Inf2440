@@ -11,7 +11,8 @@ public class Oblig2{
 
 
 			
-		}catch (NullPointerException e){
+		}catch (Exception e){
+			e.printStackTrace();
 			System.out.println("Usage: java Oblig2 'numbers to iterate over'");
 		}
 

@@ -3,16 +3,40 @@ import java.util.ArrayList;
 public class Handler{
 	private ArrayList<Integer> array = new ArrayList<>();
 	private int[] erastothenes;
+	int cores=1;
 
 	Handler(){
+		//finner ant traader som er mulig pa systemet
+		cores = Runtime.getRuntime().availableProcessors();
+		System.out.println("ant traader: " + cores);
 
 	}
+
+	void finnParralellPrimtall(int maxtall){
+		//for lokke som starter alle traader
+
+		for(int i=1; i<cores; i++){
+			new Traad(array).start();
+
+
+
+		}
+
+
+
+	}
+	synchronized void parralellFaktorisering(long tall, String utskrift){
+		//traadene gjor utskriften til en traad
+		//funksjonen lagrer løsningen
+
+	}
+
 	void finnPrimtall(int maxtall){
 		//sorterings algorithme for a finne primtall
 		// kun 2 er enseste partall som er primtall
 		// for alle oddetall, sjekk om primtall
-		maxtall=maxtall*maxtall;
-		long antPrimtall = 4000000000000L;
+		long antPrimtall = maxtall;
+		antPrimtall=antPrimtall*antPrimtall;
 		System.out.println("tester for antPrimtall: " + antPrimtall);
 		long tid = System.nanoTime();
 		for (long i=antPrimtall-100;  i<antPrimtall; i++) {
