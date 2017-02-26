@@ -13,13 +13,12 @@ class Handler{
 	}
 	void parralelisering(){
 		int cores = Runtime.getRuntime().availableProcessors();
-		System.out.println("ant traader: " + cores);
 
 		if(array.length/cores<k){
 			System.out.println("for lite arrays, klarer ikke a utnytte threads");
 			cores=array.length/k;
+			System.out.println("ant traader: " + cores);
 		}
-		// cores=1;
 
 		nyArray=new int[k*cores];
 
@@ -36,7 +35,7 @@ class Handler{
 
 			if(i>cores-rest-1){slutt=nr+start;				
 			}else{slutt=nr+start-1;}
-			System.out.println("checking from: " + start + " til " + slutt);
+			// System.out.println("checking from: " + start + " til " + slutt);
 			temp[i] = new Mintraad(array, this, start, slutt, k);
 			temp[i].start();
 			start=++slutt;
@@ -51,7 +50,6 @@ class Handler{
  // sorterings algorithmen
 
 		int counter=0;
-		System.out.println("ant resultater: " + resusltater.size());
 		for(Integer e: resusltater){
 			nyArray[counter]=e;
 			counter++;
@@ -59,7 +57,6 @@ class Handler{
 
 		int i , t ;
 		for ( int u = 0 ; u < k-1; u++) {
-			    if(array[u] == 999){System.out.println("nigga121 this shit is kerkjere" + u);}
 			t = nyArray[u+1] ;
 			i = u;
 			while ( i >= 0 && nyArray[i] < t ) {
@@ -73,7 +70,6 @@ class Handler{
 		int minste = nyArray[k-1];
 		int g , d ;
 		for ( int u = 9 ; u < nyArray.length-1; u++) {
-			if(nyArray[u] == 999){System.out.println("nigga123 this shit is kerkjere");}
 			d = nyArray[u+1] ;
 			g = u;
 			if(d>minste){
@@ -88,7 +84,7 @@ class Handler{
 			
 
 		for(int y =0; y<k; y++){
-			System.out.println("parralell array: " + nyArray[y]);
+			// System.out.println("parralell array: " + nyArray[y]);
 		} 
 
 
@@ -101,7 +97,7 @@ class Handler{
 		// System.out.println("sekvensiell");
 		System.out.println("tid pa sekvensielSortering: " + ((System.nanoTime()-sekSort)/1000000.0));
 		for(int y =0; y<k; y++){
-			System.out.println("array: " + array[y]);
+			// System.out.println("array: " + array[y]);
 		} 
 	}
 
@@ -118,7 +114,7 @@ class Handler{
 		// System.out.println("java sort algo");
 		System.out.println("tid pa Array.sort: " + ((System.nanoTime()-innebyggetSort)/1000000.0));
 		for(int i =0; i<k; i++){
-			System.out.println("backupAr: " + newArray[i]);
+			// System.out.println("backupAr: " + newArray[i]);
 		} 
 	}
 	void sekvensielSortering(){
@@ -151,14 +147,8 @@ class Handler{
 		}
 	}
 	synchronized void synkroniserArray(int[] karray, int st) {
-			System.out.println(st);
-			if(st==0){
-				for(int i=0; i<k; i++)
-				System.out.println(karray[i]);
-			}
 		for(int i =st; i<st+k; i++) {
 			resusltater.add(karray[i]);
-			if(karray[i] == 999){System.out.println("nigga this shit is kerkjere");}
 
 		}
 	}

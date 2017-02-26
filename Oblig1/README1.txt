@@ -5,6 +5,10 @@ Cpu: i7-5820k
 6c 12t
 
 
+Fikset k og n som inputs
+fikset at sortering blir riktig resultat
+fikset readme fil
+fikset kjøring av 100 000 000
 
 
 K=20
@@ -18,14 +22,14 @@ tid pa Array.sort: 0.420334
 tid pa Array.sort: 0.416944
 tid pa Array.sort: 0.422594
 MEDIAN: 0.627959
-tid pa sekvensielSortering: 0.464119
-tid pa sekvensielSortering: 0.040677
-tid pa sekvensielSortering: 0.033898
-tid pa sekvensielSortering: 0.037288
-tid pa sekvensielSortering: 0.032203
-tid pa sekvensielSortering: 0.033615
-tid pa sekvensielSortering: 0.033616
-MEDIAN: 0.037288
+tid pa sekvensielSortering: 0.399715
+tid pa sekvensielSortering: 0.394913
+tid pa sekvensielSortering: 0.387286
+tid pa sekvensielSortering: 0.384744
+tid pa sekvensielSortering: 0.091525
+tid pa sekvensielSortering: 0.070056
+tid pa sekvensielSortering: 0.061582
+MEDIAN: 0.384744
 
 
 K: 20 N: 10000
@@ -110,182 +114,115 @@ tid pa Array.sort: 58352.810969
 tid pa Array.sort: 55413.195828
 tid pa Array.sort: 80986.621913
 MEDIAN: 58352.810969
-tid pa sekvensielSortering: 5696.402275
-tid pa sekvensielSortering: 169.033822
-tid pa sekvensielSortering: 178.906584
-tid pa sekvensielSortering: 178.465629
-tid pa sekvensielSortering: 177.660554
-tid pa sekvensielSortering: 177.290219
-tid pa sekvensielSortering: 177.066775
+tid pa sekvensielSortering: 4818.378608
+tid pa sekvensielSortering: 4813.951228
+tid pa sekvensielSortering: 4971.614834
+tid pa sekvensielSortering: 4957.119992
+tid pa sekvensielSortering: 4958.877046
+tid pa sekvensielSortering: 4951.355332
+tid pa sekvensielSortering: 4944.974856
 MEDIAN: 177.660554
 
 For parraleliseringen valgte jeg å dele opp arrayet i mindre deler over de forskjellige threadene,
 etterfølgt av en sammenslåing av "main"
 
 K: 20 N: 1000
-ant traader: 12
-tid pa sekvensielSortering: 0.369488
-tid pa parralellisering: 1.877944
-ant traader: 12
-tid pa sekvensielSortering: 0.030226
-tid pa parralellisering: 0.419204
-ant traader: 12
-tid pa sekvensielSortering: 0.030226
-tid pa parralellisering: 0.549146
-ant traader: 12
-tid pa sekvensielSortering: 0.030226
-tid pa parralellisering: 0.412142
-ant traader: 12
-tid pa sekvensielSortering: 0.030225
-tid pa parralellisering: 0.428809
-ant traader: 12
-tid pa sekvensielSortering: 0.029943
-tid pa parralellisering: 0.616659
-ant traader: 12
-tid pa sekvensielSortering: 0.029661
-tid pa parralellisering: 0.515813
+tid pa parralellisering: 1.311011
+tid pa parralellisering: 1.279654
+tid pa parralellisering: 1.114684
+tid pa parralellisering: 1.05056
+tid pa parralellisering: 1.570331
+tid pa parralellisering: 1.146887
+tid pa parralellisering: 3.242921
 
-MEDIAN: 0.515813
+MEDIAN: 1.279654
 
-SPEEDUP: 0.037288 - 0.515813 = -0.478525
+SPEEDUP: 0.384744/1.279654 = 0.3
 
 
-K: 20 N: 10000
-ant traader: 12
-tid pa sekvensielSortering: 1.936982
-tid pa parralellisering: 3.411823
-ant traader: 12
-tid pa sekvensielSortering: 0.041243
-tid pa parralellisering: 0.411577
-ant traader: 12
-tid pa sekvensielSortering: 0.040395
-tid pa parralellisering: 2.751944
-ant traader: 12
-tid pa sekvensielSortering: 0.04887
-tid pa parralellisering: 0.491802
-ant traader: 12
-tid pa sekvensielSortering: 0.082485
-tid pa parralellisering: 0.435305
-ant traader: 12
-tid pa sekvensielSortering: 0.021469
-tid pa parralellisering: 0.754511
-ant traader: 12
-tid pa sekvensielSortering: 0.021186
-tid pa parralellisering: 0.408187
+K: 20 N :10000
+tid pa parralellisering: 4.501955
+tid pa parralellisering: 5.80449
+tid pa parralellisering: 8.223405
+tid pa parralellisering: 3.292638
+tid pa parralellisering: 4.905342
+tid pa parralellisering: 4.881896
+tid pa parralellisering: 1.186152
 
-MEDIAN: 0.491802
+MEDIAN: 4.881896
 
-SPEEDUP: 0.491802 - 0.037853 = 0.453949
+SPEEDUP: 0.511014/4.881896 = 0.1
 
 K: 20 N: 100000000
-ant traader: 12
-tid pa sekvensielSortering: 1190.336954
-tid pa parralellisering: 1192.212072
-ant traader: 12
-tid pa sekvensielSortering: 166.499955
-tid pa parralellisering: 166.779048
-ant traader: 12
-tid pa sekvensielSortering: 176.75096
-tid pa parralellisering: 177.038809
-ant traader: 12
-tid pa sekvensielSortering: 176.75661
-tid pa parralellisering: 177.007454
-ant traader: 12
-tid pa sekvensielSortering: 176.567347
-tid pa parralellisering: 176.901806
-ant traader: 12
-tid pa sekvensielSortering: 176.577234
-tid pa parralellisering: 176.83401
-ant traader: 12
-tid pa sekvensielSortering: 176.838812
-tid pa parralellisering: 177.118753
+tid pa parralellisering: 453.014081
+tid pa parralellisering: 430.232558
+tid pa parralellisering: 405.314606
+tid pa parralellisering: 413.246769
+tid pa parralellisering: 409.931814
+tid pa parralellisering: 421.014244
+tid pa parralellisering: 423.175815
 
-MEDIAN: 177.007454
+MEDIAN: 421.014244
 
 
-SPEEDUP: 177.078641-177.660554 = 0
+SPEEDUP: 909.608934/421.014244 = 2.1
 
 
 K: 100 N: 1000
-ant traader: 12
-tid pa sekvensielSortering: 1.575405
-tid pa parralellisering: 3.001941
-ant traader: 12
-tid pa sekvensielSortering: 0.007909
-tid pa parralellisering: 0.4096
-ant traader: 12
-tid pa sekvensielSortering: 0.007628
-tid pa parralellisering: 0.657902
-ant traader: 12
-tid pa sekvensielSortering: 0.00791
-tid pa parralellisering: 2.739797
-ant traader: 12
-tid pa sekvensielSortering: 0.009322
-tid pa parralellisering: 1.071174
-ant traader: 12
-tid pa sekvensielSortering: 0.01017
-tid pa parralellisering: 1.345747
-ant traader: 12
-tid pa sekvensielSortering: 0.008192
-tid pa parralellisering: 0.419204
+for lite arrays, klarer ikke a utnytte threads
+ant traader: 10
+tid pa parralellisering: 2.740382
+for lite arrays, klarer ikke a utnytte threads
+ant traader: 10
+tid pa parralellisering: 1.325134
+for lite arrays, klarer ikke a utnytte threads
+ant traader: 10
+tid pa parralellisering: 1.649427
+for lite arrays, klarer ikke a utnytte threads
+ant traader: 10
+tid pa parralellisering: 1.257056
+for lite arrays, klarer ikke a utnytte threads
+ant traader: 10
+tid pa parralellisering: 1.667788
+for lite arrays, klarer ikke a utnytte threads
+ant traader: 10
+tid pa parralellisering: 2.442078
+for lite arrays, klarer ikke a utnytte threads
+ant traader: 10
+tid pa parralellisering: 1.988408
 
-MEDIAN: 1.071174
+MEDIAN: 1.649427
 
 
-SPEEDUP: 0.017232 - 1.071174 = 1.053942
+SPEEDUP: 0.291524/1.649427 = 0.17
 
 K: 100 N: 10000
-ant traader: 12
-tid pa sekvensielSortering: 4.234129
-tid pa parralellisering: 5.665185
-ant traader: 12
-tid pa sekvensielSortering: 0.058756
-tid pa parralellisering: 0.544626
-ant traader: 12
-tid pa sekvensielSortering: 0.095197
-tid pa parralellisering: 0.741234
-ant traader: 12
-tid pa sekvensielSortering: 0.081637
-tid pa parralellisering: 0.48474
-ant traader: 12
-tid pa sekvensielSortering: 0.08644
-tid pa parralellisering: 6.94935
-ant traader: 12
-tid pa sekvensielSortering: 0.022034
-tid pa parralellisering: 0.426266
-ant traader: 12
-tid pa sekvensielSortering: 0.022598
-tid pa parralellisering: 0.65536
-
-MEDIAN: 0.65536
+tid pa parralellisering: 16.201895
+tid pa parralellisering: 6.448273
+tid pa parralellisering: 6.322849
+tid pa parralellisering: 1.423156
+tid pa parralellisering: 4.40139
+tid pa parralellisering: 1.782759
+tid pa parralellisering: 4.53783
 
 
-SPEEDUP: 0.052541 - 0.65536 = 0.602819
+MEDIAN: 4.53783
+
+
+SPEEDUP: 1.555076/4.53783 = 0.34
 
 K: 100 N: 100000000
-ant traader: 12
-tid pa sekvensielSortering: 5104.765112
-tid pa parralellisering: 5106.646727
-ant traader: 12
-tid pa sekvensielSortering: 164.310999
-tid pa parralellisering: 164.572859
-ant traader: 12
-tid pa sekvensielSortering: 176.754915
-tid pa parralellisering: 177.029488
-ant traader: 12
-tid pa sekvensielSortering: 177.266491
-tid pa parralellisering: 177.514793
-ant traader: 12
-tid pa sekvensielSortering: 176.772429
-tid pa parralellisering: 177.051804
-ant traader: 12
-tid pa sekvensielSortering: 176.971862
-tid pa parralellisering: 177.221576
-ant traader: 12
-tid pa sekvensielSortering: 177.232028
-tid pa parralellisering: 177.516488
-
-MEDIAN: 177.029488
+tid pa parralellisering: 1972.202118
+tid pa parralellisering: 1938.31246
+tid pa parralellisering: 1814.215917
+tid pa parralellisering: 1811.07017
+tid pa parralellisering: 1833.431638
+tid pa parralellisering: 1851.010362
+tid pa parralellisering: 1801.464851
 
 
-SPEEDUP: 177.660554 - 177.029488 = 0
+MEDIAN: 1833.431638
+
+
+SPEEDUP: 4951.355332/1833.431638 = 2.7
+

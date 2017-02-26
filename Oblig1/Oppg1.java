@@ -19,10 +19,10 @@ public class Oppg1{
       array = oprettArray(n);
 
       for (int y=0; y<7 ;y++ ) {
-      }
         new Handler(Arrays.copyOf(array, array.length), k).arraySort();
-        // new Handler(Arrays.copyOf(array, array.length), k).sekv();
+        new Handler(Arrays.copyOf(array, array.length), k).sekv();
         new Handler(Arrays.copyOf(array, array.length), k).parralelisering();
+      }
 
 
     }catch(Exception e){

@@ -14,15 +14,11 @@ class Mintraad extends Thread{
   }
 
   public void run(){
-    System.out.println("starting");
     sekvensielSortering();
   }
   void sekvensielSortering(){
     int i , t ;
     for (int u = start ; u < start+k-1; u++) {
-
-    if(array[u] == 999){System.out.println("nigga12 this shit is kerkjere");}
-
       t = array[u+1] ;
       i = u;
       while ( i >= start && array[i] < t ) {
@@ -37,8 +33,6 @@ class Mintraad extends Thread{
     int minste = array[start+k-1];
     int i , t ;
     for ( int u = start+k-1 ; u < slutt-1; u++) {
-          if(array[u] == 999){System.out.println("nigga12 this shit is kerkjere");}
-
       t = array[u+1] ;
       i = u;
       if(t>minste){
