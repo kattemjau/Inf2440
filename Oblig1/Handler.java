@@ -2,184 +2,165 @@ import java.util.concurrent.*;
 import java.util.*;
 
 class Handler{
+	int[] array;
+	int k;
 	int[] nyArray;
-	CyclicBarrier barrier = new CyclicBarrier(7);
+	ArrayList<Integer> resusltater = new ArrayList<>();
 
-	void run(int[] array){
-		double[] tiderK20;
-		double[] tiderK100;
-		Mintraad[] k20= new Mintraad[7];
-		Mintraad[] k100= new Mintraad[7];
-// /*
-		long tik = System.nanoTime();
+	Handler(int[] array, int k){
+		this.array=array;
+		this.k=k;
+	}
+	void parralelisering(){
+		int cores = Runtime.getRuntime().availableProcessors();
+		System.out.println("ant traader: " + cores);
+
+		if(array.length/cores<k){
+			System.out.println("for lite arrays, klarer ikke a utnytte threads");
+			cores=array.length/k;
+		}
+		// cores=1;
+
+		nyArray=new int[k*cores];
+
+		long sekSort = System.nanoTime();
+		int nr = array.length/cores;
+		//legg til 4 ekstra pa siste
+		int rest = array.length%cores;
+		int start=0, slutt;
+
+		Mintraad[] temp = new Mintraad[cores];
+
+		//parralellisere svaret
+		for(int i=0; i<cores; i++){
+
+			if(i>cores-rest-1){slutt=nr+start;				
+			}else{slutt=nr+start-1;}
+			System.out.println("checking from: " + start + " til " + slutt);
+			temp[i] = new Mintraad(array, this, start, slutt, k);
+			temp[i].start();
+			start=++slutt;
+		}
+
+		for(Mintraad e: temp){
+			try{
+				e.join();
+			}catch(Exception y){}
+		}
+
+ // sorterings algorithmen
+
+		int counter=0;
+		System.out.println("ant resultater: " + resusltater.size());
+		for(Integer e: resusltater){
+			nyArray[counter]=e;
+			counter++;
+		}
+
+		int i , t ;
+		for ( int u = 0 ; u < k-1; u++) {
+			    if(array[u] == 999){System.out.println("nigga121 this shit is kerkjere" + u);}
+			t = nyArray[u+1] ;
+			i = u;
+			while ( i >= 0 && nyArray[i] < t ) {
+				nyArray[i+1] = nyArray[i] ;
+				i--;
+			}
+			nyArray[i+1] = t ;
+		}
+
+
+		int minste = nyArray[k-1];
+		int g , d ;
+		for ( int u = 9 ; u < nyArray.length-1; u++) {
+			if(nyArray[u] == 999){System.out.println("nigga123 this shit is kerkjere");}
+			d = nyArray[u+1] ;
+			g = u;
+			if(d>minste){
+				while ( g >= 0 && nyArray[g] < d ) {
+					nyArray[g+1] = nyArray[g] ;
+					g--;
+				}
+				minste = nyArray[k-1];
+			}
+			nyArray[g+1] = d ;
+		}
+			
+
+		for(int y =0; y<k; y++){
+			System.out.println("parralell array: " + nyArray[y]);
+		} 
+
+
+		System.out.println("tid pa parralellisering: " + ((System.nanoTime()-sekSort)/1000000.0));
+	}
+
+	void sekv(){
+		long sekSort = System.nanoTime();
+		sekvensielSortering();
+		// System.out.println("sekvensiell");
+		System.out.println("tid pa sekvensielSortering: " + ((System.nanoTime()-sekSort)/1000000.0));
+		for(int y =0; y<k; y++){
+			System.out.println("array: " + array[y]);
+		} 
+	}
+
+	void arraySort(){
 		Integer[] newArray = new Integer[array.length];
 		int w = 0;
 		for (int value : array) {
-    	newArray[w++] = Integer.valueOf(value);
+			newArray[w++] = Integer.valueOf(value);
 		}
+
+		long innebyggetSort = System.nanoTime();
 
 		Arrays.sort(newArray, Collections.reverseOrder());
-		/*
-		for(int i =0; i<20; i++){
+		// System.out.println("java sort algo");
+		System.out.println("tid pa Array.sort: " + ((System.nanoTime()-innebyggetSort)/1000000.0));
+		for(int i =0; i<k; i++){
 			System.out.println("backupAr: " + newArray[i]);
-		} */
-		System.out.println("tid pa Array.sort: " + ((System.nanoTime()-tik)/1000000.0));
-// */
-
-
-		try{
-			System.out.println("Testing av instikk sortering A2");
-			tiderK20=new double[7];
-			nyArray = new int[array.length];
-			int  k=20;
-
-
-
-			for(int i=0; i<7; i++){
-				int start = i*array.length/7;
-				int slutt = start+array.length/7;
-				// System.out.println("slutt: " + slutt);
-				// System.out.println("start: " + start);
-				long tid = System.nanoTime();
-				k20[i] = new Mintraad(array, this, start, slutt, k);
-				k20[i].start();
-				tiderK20[i]=(System.nanoTime()-tid)/1000000.0;
-
+		} 
+	}
+	void sekvensielSortering(){
+		int i , t ;
+		for ( int u = 0 ; u < k-1; u++) {
+			t = array[u+1] ;
+			i = u;
+			while ( i >= 0 && array[i] < t ) {
+				array[i+1] = array[i] ;
+				i--;
 			}
-
-			for(Mintraad e: k20){
-				try{
-					e.join();
-				}catch(Exception y){}
-			}
-
-			// Tidene pa traadene
-			System.out.println("Times per thread in order to finishing K20");
-			double gjennom=0;
-			for (int i=0; i<tiderK20.length; i++) {
-				System.out.println("Trad[" + i + "]: " + tiderK20[i]);
-				gjennom = gjennom + tiderK20[i];
-			}
-			System.out.println("Gjennomsnitts tiden K20: " + gjennom/tiderK20.length);
-
-
-			System.out.println("start: " + 0);
-	    System.out.println("slutt: " + nyArray.length );
-	    System.out.println("antallPlasser: " + k);
-
-
-
-			// /*
-						//siste sortering!
-						int q, t ;
-						for ( int o = 0 ; o < nyArray.length-1 ; o++) {
-							t = nyArray[o+1] ;
-							q= o ;
-							//TODO: sjekke om verdien skal flyttes frammover
-							for(int d = 0; d<nyArray.length; d++){
-								if(nyArray[o]>nyArray[d]){
-									while ( q>= 0 && nyArray[q] < t ) {
-										nyArray[q +1] = nyArray[q] ;
-										q--;
-									}
-									nyArray[q+1] = t ;
-
-								}
-							}
-						}
-
-
-			// */
-
-
-/*
-			//pintring sorted array
-			for (int u=0; u<k; u++) {
-		 		System.out.println(nyArray[u]);
-		 	}
-// */
-			// barrier.await();
-			// System.out.println("No error");
-		}catch(Exception e){
-			System.out.println("error running thread K20");
+			array[i+1] = t ;
 		}
-// /*
-
-		Arrays.fill(nyArray, 0);
-
-		try{
-			tiderK100=new double[7];
-			nyArray = new int[array.length];
-			int  k=100;
-			for(int i=0; i<7; i++){
-				int start = i*array.length/7;
-				int slutt = start+array.length/7;
-				long tid = System.nanoTime();
-				k100[i] = new Mintraad(array, this, start, slutt, k);
-				k100[i].start();
-				tiderK100[i]=(System.nanoTime()-tid)/1000000.0;
-
-			}
-
-			for(Mintraad e: k100){
-				try{
-					e.join();
-				}catch(Exception y){}
-			}
-			System.out.println("fortsetter");
-
-			// Tidene pa traadene
-			System.out.println("Times per thread in order to finishing for K100");
-			double gjennom=0;
-			for (int i=0; i<tiderK100.length; i++) {
-				System.out.println("Trad[" + i + "]: " + tiderK100[i]);
-				gjennom = gjennom + tiderK100[i];
-			}
-			System.out.println("Gjennomsnitts tiden K100: " + gjennom/tiderK100.length);
-
-			// barrier.await();
-			// System.out.println("No error");
-		}catch(Exception e){
-			System.out.println("error running thread K100");
-		}
-
-
-		// /*
-		//siste sortering!
-		int q, t ;
-		for ( int o = 0 ; o < nyArray.length-1 ; o++) {
-			t = nyArray[o+1] ;
-			q= o ;
-			//TODO: sjekke om verdien skal flyttes frammover
-			for(int d = 0; d<nyArray.length; d++){
-				if(nyArray[o]>nyArray[d]){
-					while ( q>= 0 && nyArray[q] < t ) {
-						nyArray[q +1] = nyArray[q] ;
-						q--;
-					}
-					nyArray[q+1] = t ;
-
+		sekvSort();
+	}
+	void sekvSort(){
+		int minste = array[k-1];
+		int i , t ;
+		for ( int u = 9 ; u < array.length-1; u++) {
+			t = array[u+1] ;
+			i = u;
+			if(t>minste){
+				while ( i >= 0 && array[i] < t ) {
+					array[i+1] = array[i] ;
+					i--;
 				}
+				minste = array[k-1];
 			}
+			array[i+1] = t ;
 		}
-
-
-		// */
-
-
-
-		// */
 	}
-	synchronized void synkroniserArray(int[] array, int st, int sl) {
-		for(int i =st; i<sl; i++) {
-			nyArray[i]=array[i];
+	synchronized void synkroniserArray(int[] karray, int st) {
+			System.out.println(st);
+			if(st==0){
+				for(int i=0; i<k; i++)
+				System.out.println(karray[i]);
+			}
+		for(int i =st; i<st+k; i++) {
+			resusltater.add(karray[i]);
+			if(karray[i] == 999){System.out.println("nigga this shit is kerkjere");}
 
 		}
-		/*
-		for (int u=0; u<9; u++) {
-		System.out.println(nyArray[u]);
 	}
-	System.out.println();
-	*/
-}
+
 }
