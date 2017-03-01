@@ -5,11 +5,13 @@ import java.util.LinkedHashMap;
 
 public class Handler{
 	private ArrayList<Integer> array = new ArrayList<>();
-	private int[] erastothenes;
 	private int cores=1;
 	private CyclicBarrier vent;
 	private LinkedHashMap<Integer, LinkedHashMap<Long, String>> result = new LinkedHashMap<>();
 	private int printRekke;
+	private int c=0;
+
+	private byte[] bitArr;
 
 	Handler(){
 		//finner ant traader som er mulig pa systemet
@@ -17,7 +19,43 @@ public class Handler{
 		System.out.println("ant traader: " + cores);
 	}
 
+	void erastothenesSil(int maxtall){
+		bitArr = new byte [(maxtall/14)+1];
+		opprettArray(maxtall);
+
+		//dropper 1
+		//dropper 2
+		//dropper alle partall
+		int[] erastothenes = {3, 5, 7};
+
+		long ti = System.nanoTime();
+
+		for(Integer e: erastothenes){
+			// System.out.println("testing for "+ e);
+			if(e<10 && e!=0){
+				int y=1;
+				for(int i=y*e; i<maxtall; i=++y*e){
+					crossOut(i);
+					// System.out.println("fjerner index: " + i);
+					// System.out.println("tallet som blir fjernet er: " + (((i)*2)+3));
+
+				}
+				System.out.println();
+			}else if(e>10){
+				break;
+			}
+		}
+		System.out.println("tid pa eratosthenesSil: " + ((System.nanoTime()-ti)/1000000.0) + " ms");
+	}
+
+	void crossOut(int i){
+		int arrNum = i/14;
+		int bitNum = (1%14) >>1;
+		bitArr[arrNum]= (byte) (bitArr[arrNum] & ~(1 << bitNum));
+	}
+
 	void finnParralellPrimtall(int maxtall){
+
 		//for lokke som starter alle traader
 		Traad[] traadAr = new Traad[cores];
 		vent = new CyclicBarrier(cores+1);
@@ -54,18 +92,14 @@ public class Handler{
 				e.join();
 			}catch(Exception y){}
 		}
-		System.out.println("tid pa parralell Faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");
-	}
-
+		System.out.println("tid pa parralell Faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");}
 	synchronized void parralellFaktorisering(LinkedHashMap<Long, String> result, int id){
 		//traadene gjor utskriften til en traad
 		//funksjonen lagrer løsningen
 		//synchronized er treig, best med minnst kall
 		//eventuell vente pa en spesifikk traad, to print them in sequence
-		this.result.put(id, result);
-	}
+		this.result.put(id, result);}
 
-	private int c=0;
 	void printResult(){
 		for (int k: result.keySet()) {
 			if(k==c){
@@ -84,7 +118,6 @@ public class Handler{
 /*
 */
 	}
-
 	void finnPrimtall(int maxtall){
 		//sorterings algorithme for a finne primtall
 		// kun 2 er enseste partall som er primtall
@@ -100,19 +133,10 @@ public class Handler{
 		}
 		System.out.println("tid pa sekvensiel faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");
 		System.out.println();
-
 	}
 	/*
 
-	void setAllPrime(){
-		for (int i = 0; i <bitArr.length ; i++) {
-			bitArr[i] = (byte)127
-	}
-	void crossOut(int i){
-		int arrNum = i/14;
-		int bitNum = (1%14) >>1;
-		bitArr[arrNum]= (byte) (bitArr[arrNum] & ~(1 << bitNum));
-	}
+	
 	boolean isPrime (int k){
 		if(k==2) return true;
 		if(k%2 == 0) return false;
@@ -147,6 +171,7 @@ public class Handler{
 		System.out.print(maxtall);
 	}
 
+	/*
 	void eratosthenesSil(int maxtall){
 		System.out.println("eratosthenesSil");
 		opprettArray(maxtall);
@@ -179,15 +204,18 @@ public class Handler{
 		// 	System.out.println(erastothenes[i]);
 		// }
 
-	}
+	} */
 
 	void opprettArray(int maxtall){
-		erastothenes=new int[maxtall];
-
+		/*erastothenes=new int[maxtall];
 		for(int i=2; i<maxtall; i++){
 			erastothenes[i-2]=i;
 			// System.out.println(i);
+		}*/
+		for(int i=0; i<bitArr.length; i++){
+			bitArr[i]=(byte)127;
 		}
+
 	}
 
 

@@ -5,11 +5,11 @@ public class Oblig2{
 		int antTall = Integer.parseInt(args[0]);
 		Handler hand = new Handler();
 
-		hand.eratosthenesSil(antTall);
-		hand.finnPrimtall(antTall);
+		hand.erastothenesSil(antTall);
+		// hand.finnPrimtall(antTall);
 
-		hand.finnParralellPrimtall(antTall);
-		hand.printResult();
+		// hand.finnParralellPrimtall(antTall);
+		// hand.printResult();
 
 		}catch (Exception e){
 			e.printStackTrace();
