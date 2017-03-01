@@ -35,7 +35,7 @@ public class Handler{
 		for(int i=0; i<cores; i++){
 
 			long[] arry;
-			if(i>cores-rest-1){arry = new long[nr+1];				
+			if(i>cores-rest-1){arry = new long[nr+1];
 			}else{ arry = new long[nr];}
 			// System.out.println("arry lgnth" + arry.length);
 
@@ -43,7 +43,7 @@ public class Handler{
 				arry[k] = antPrimtall;
 				// System.out.println("arry : " + k);
 				antPrimtall++;
-			}	
+			}
 			// System.out.println("test posisjon: " + arry[0] + " indesks: " + i);
 			traadAr[i] = new Traad(array, this, arry, i);
 			traadAr[i].start();
@@ -79,11 +79,11 @@ public class Handler{
 				c++;
 				printResult();
 				break;
-				
+
 			}
 		}
 /*
-*/		
+*/
 	}
 
 	void finnPrimtall(int maxtall){
@@ -96,15 +96,15 @@ public class Handler{
 		long tid = System.nanoTime();
 		for (long i=antPrimtall-100;  i<antPrimtall; i++) {
 			System.out.print(i + " = ");
-			faktorisering(i);		
-			System.out.println(" ");	
+			faktorisering(i);
+			System.out.println(" ");
 		}
 		System.out.println("tid pa sekvensiel faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");
 		System.out.println();
 
 	}
 
-	
+
 //primtall = tall som bare er delelig på seg selv
 //sjekke om kan faktoriseres
 // if modula == 0 || primtall = true
@@ -148,7 +148,7 @@ public class Handler{
 				array.add(k);
 			}
 		}
-		
+
 
 		// for(int i=0;i<maxtall;i++){
 		// 	System.out.println(erastothenes[i]);
