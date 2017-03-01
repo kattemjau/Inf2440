@@ -23,7 +23,6 @@ public class Handler{
 		vent = new CyclicBarrier(cores+1);
 
 		int nr = 100/cores;
-		//legg til 4 ekstra pa siste
 		int rest = 100%cores;
 
 		long antPrimtall = maxtall;
@@ -103,6 +102,32 @@ public class Handler{
 		System.out.println();
 
 	}
+	/*
+
+	void setAllPrime(){
+		for (int i = 0; i <bitArr.length ; i++) {
+			bitArr[i] = (byte)127
+	}
+	void crossOut(int i){
+		int arrNum = i/14;
+		int bitNum = (1%14) >>1;
+		bitArr[arrNum]= (byte) (bitArr[arrNum] & ~(1 << bitNum));
+	}
+	boolean isPrime (int k){
+		if(k==2) return true;
+		if(k%2 == 0) return false;
+		int arrNum = k/14;
+		int bitNum = (i%14) >> 1;
+		return (bitArr[arrNum] & ~(1 << bitNum))  != 0;
+	}
+	int nextPrime(int i){
+		i++;
+		while(!isPrime(i)) i++;
+		return i;
+	}
+	*/
+
+
 
 
 //primtall = tall som bare er delelig på seg selv
