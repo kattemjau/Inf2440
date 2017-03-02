@@ -4,31 +4,24 @@ import java.util.LinkedHashMap;
 
 
 public class Handler{
-	private ArrayList<Integer> array = new ArrayList<>();
-	// private int[] array;
+	// private ArrayList<Integer> array = new ArrayList<>();
 	private int cores=1;
 	private LinkedHashMap<Integer, LinkedHashMap<Long, String>> result = new LinkedHashMap<>();
-	private int c=0;
-
+	
+	private int maxtall;
 	private byte[] bitArr;
 
-	Handler(){
+	Handler(int maxtall){
 		//finner ant traader som er mulig pa systemet
 		cores = Runtime.getRuntime().availableProcessors();
 		System.out.println("ant traader: " + cores);
+		this.maxtall=maxtall;
 	}
 
-	void erastothenesSil(int maxtall){
+	void erastothenesSil(){
 		bitArr = new byte [maxtall];
-		// array = new int[maxtall];
 		// (maxtall/14)+1
 		opprettArray(maxtall);
-
-		//dropper 1
-		//dropper 2
-		//dropper alle partall
-		//bytte ut med nextPrime
-		int[] erastothenes = {3, 5, 7, 11, 13};
 
 		long ti = System.nanoTime();
 
@@ -51,22 +44,21 @@ public class Handler{
 		}
 		System.out.println("tid pa eratosthenesSil: " + ((System.nanoTime()-ti)/1000000.0) + " ms");
 
+
 		System.out.println("overforer svar til int array");
+				
+		long his = System.nanoTime();
 		// array[1]=2;
 		// int counter=1;
-		for(int i=2; i<maxtall; i++){
-
-			if(isPrime(i) && i!=0){
-			// System.out.println("primtall: " + i);
-			if(i==0){
-				System.out.println("i er 0 din tulling");
-			}
-				array.add(i);
-				// array[counter]=i;
-				// counter++;
-			}
-		}
-
+		// for(int i=2; i<maxtall; i++){
+		// 	if(isPrime(i) && i!=0){
+		// 	// System.out.println("primtall: " + i);
+		// 		array.add(i);
+		// 		// array[counter]=i;
+		// 		// counter++;
+		// 	}
+		// }
+		System.out.println("tid brukt pa a overfore til arraylist: " + ((System.nanoTime()-his)/1000000.0) + " ms");
 
 	}
 
@@ -91,7 +83,7 @@ public class Handler{
 	}
 
 
-	void finnParralellPrimtall(int maxtall){
+	void finnParralellPrimtall(){
 
 		//for lokke som starter alle traader
 		Traad[] traadAr = new Traad[cores];
@@ -118,7 +110,7 @@ public class Handler{
 				antPrimtall++;
 			}
 			// System.out.println("test posisjon: " + arry[0] + " indesks: " + i);
-			traadAr[i] = new Traad(array, this, arry, i);
+			// traadAr[i] = new Traad(array, this, arry, i);
 			traadAr[i].start();
 
 		}
@@ -137,6 +129,7 @@ public class Handler{
 		this.result.put(id, result);}
 
 	void printResult(){
+		int c=0;
 		for (int k: result.keySet()) {
 			if(k==c){
 				// System.out.println("rekkefolge: " + k);
@@ -154,7 +147,7 @@ public class Handler{
 /*
 */
 	}
-	void finnPrimtall(int maxtall){
+	void finnPrimtall(){
 		//sorterings algorithme for a finne primtall
 		// kun 2 er enseste partall som er primtall
 		// for alle oddetall, sjekk om primtall
@@ -183,16 +176,24 @@ public class Handler{
 // if modula == 0 || primtall = true
 // rekursiv faktorisering if(n%i != 0){ System.out.print(n/i + " + "); rekursiv(n/i)}
 
-	void faktorisering(long maxtall){
+	void faktorisering(long tall){
 		//denne skal multithreades "tar lengst tid"
-		for(Integer i: array){
-			if(maxtall%i == 0){
+
+		for(int i=2; i<maxtall; i=nextPrime(i)){
+			if(i==0){
+				return;
+			}
+			if(tall%i == 0){
+				if(tall/i ==1){
+					System.out.print(i);
+					return;
+				}
 				System.out.print(i + " * ");
-				faktorisering(maxtall/i);
+				faktorisering(tall/i);
 				return;
 			}
 		}
-		System.out.print(maxtall);
+		System.out.print(tall);
 	}
 
 	/*

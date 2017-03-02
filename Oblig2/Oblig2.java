@@ -3,13 +3,13 @@ public class Oblig2{
 	public static void main(String[] args) {
 		try{
 		int antTall = Integer.parseInt(args[0]);
-		Handler hand = new Handler();
+		Handler hand = new Handler(antTall);
 
-		hand.erastothenesSil(antTall);
-		// hand.finnPrimtall(antTall);
+		hand.erastothenesSil();
+		hand.finnPrimtall();
 
-		hand.finnParralellPrimtall(antTall);
-		hand.printResult();
+		// hand.finnParralellPrimtall();
+		// hand.printResult();
 
 		}catch (Exception e){
 			e.printStackTrace();
@@ -18,3 +18,4 @@ public class Oblig2{
 
 	}
 }
+// 
