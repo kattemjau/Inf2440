@@ -6,9 +6,7 @@ import java.util.LinkedHashMap;
 public class Handler{
 	private ArrayList<Integer> array = new ArrayList<>();
 	private int cores=1;
-	private CyclicBarrier vent;
 	private LinkedHashMap<Integer, LinkedHashMap<Long, String>> result = new LinkedHashMap<>();
-	private int printRekke;
 	private int c=0;
 
 	private byte[] bitArr;
@@ -20,45 +18,76 @@ public class Handler{
 	}
 
 	void erastothenesSil(int maxtall){
-		bitArr = new byte [(maxtall/14)+1];
+		bitArr = new byte [maxtall];
+		// (maxtall/14)+1
 		opprettArray(maxtall);
 
 		//dropper 1
 		//dropper 2
 		//dropper alle partall
-		int[] erastothenes = {3, 5, 7};
+		//bytte ut med nextPrime
+		int[] erastothenes = {3, 5, 7, 11, 13};
 
 		long ti = System.nanoTime();
 
 		for(Integer e: erastothenes){
-			// System.out.println("testing for "+ e);
-			if(e<10 && e!=0){
-				int y=1;
-				for(int i=y*e; i<maxtall; i=++y*e){
+			System.out.println("testing for "+ e);
+
+			int y=2;
+			for(int i=y*e; i<maxtall; i=++y*e){
+				if((i & 1) != 0){
 					crossOut(i);
 					// System.out.println("fjerner index: " + i);
-					// System.out.println("tallet som blir fjernet er: " + (((i)*2)+3));
+					System.out.println("tallet som blir fjernet er: " + i);
 
 				}
-				System.out.println();
-			}else if(e>10){
-				break;
+
+
 			}
+			System.out.println();
+
 		}
 		System.out.println("tid pa eratosthenesSil: " + ((System.nanoTime()-ti)/1000000.0) + " ms");
+
+		// array.add(2);
+		// 187
+		// 121 finner den som primtal == is not though
+
+		for(int i=2; i<maxtall; i++){
+			if(isPrime(i)){
+			System.out.println("primtall: " + i);
+				array.add(i);
+			}
+		}
+
+
 	}
+
 
 	void crossOut(int i){
 		int arrNum = i/14;
-		int bitNum = (1%14) >>1;
+		int bitNum = (i%14) >>1;
+		System.out.println("arrNum: " + arrNum + " bitNum  " + bitNum);
 		bitArr[arrNum]= (byte) (bitArr[arrNum] & ~(1 << bitNum));
 	}
+	boolean isPrime (int k){
+		if(k==2) return true;
+		if(k%2 == 0) return false;
+		int arrNum = k/14;
+		int bitNum = (k%14) >> 1;
+		return (bitArr[arrNum] & 1 << bitNum)  != 0;
+	}
+	int nextPrime(int i){
+		i++;
+		while(!isPrime(i)) i++;
+		return i;
+	}
+
 
 	void finnParralellPrimtall(int maxtall){
 
 		//for lokke som starter alle traader
 		Traad[] traadAr = new Traad[cores];
-		vent = new CyclicBarrier(cores+1);
 
 		int nr = 100/cores;
 		int rest = 100%cores;
@@ -134,22 +163,10 @@ public class Handler{
 		System.out.println("tid pa sekvensiel faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");
 		System.out.println();
 	}
-	/*
-
 	
-	boolean isPrime (int k){
-		if(k==2) return true;
-		if(k%2 == 0) return false;
-		int arrNum = k/14;
-		int bitNum = (i%14) >> 1;
-		return (bitArr[arrNum] & ~(1 << bitNum))  != 0;
-	}
-	int nextPrime(int i){
-		i++;
-		while(!isPrime(i)) i++;
-		return i;
-	}
-	*/
+	
+
+
 
 
 
