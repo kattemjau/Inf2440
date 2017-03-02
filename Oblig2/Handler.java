@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 public class Handler{
 	private ArrayList<Integer> array = new ArrayList<>();
+	// private int[] array;
 	private int cores=1;
 	private LinkedHashMap<Integer, LinkedHashMap<Long, String>> result = new LinkedHashMap<>();
 	private int c=0;
@@ -19,6 +20,7 @@ public class Handler{
 
 	void erastothenesSil(int maxtall){
 		bitArr = new byte [maxtall];
+		// array = new int[maxtall];
 		// (maxtall/14)+1
 		opprettArray(maxtall);
 
@@ -30,33 +32,38 @@ public class Handler{
 
 		long ti = System.nanoTime();
 
-		for(Integer e: erastothenes){
-			System.out.println("testing for "+ e);
+		for(int e = nextPrime(2); e<212; e=nextPrime(e)){
+			// System.out.println("testing for "+ e);
 
 			int y=2;
 			for(int i=y*e; i<maxtall; i=++y*e){
 				if((i & 1) != 0){
 					crossOut(i);
 					// System.out.println("fjerner index: " + i);
-					System.out.println("tallet som blir fjernet er: " + i);
+					// System.out.println("tallet som blir fjernet er: " + i);
 
 				}
 
 
 			}
-			System.out.println();
+			// System.out.println();
 
 		}
 		System.out.println("tid pa eratosthenesSil: " + ((System.nanoTime()-ti)/1000000.0) + " ms");
 
-		// array.add(2);
-		// 187
-		// 121 finner den som primtal == is not though
-
+		System.out.println("overforer svar til int array");
+		// array[1]=2;
+		// int counter=1;
 		for(int i=2; i<maxtall; i++){
-			if(isPrime(i)){
-			System.out.println("primtall: " + i);
+
+			if(isPrime(i) && i!=0){
+			// System.out.println("primtall: " + i);
+			if(i==0){
+				System.out.println("i er 0 din tulling");
+			}
 				array.add(i);
+				// array[counter]=i;
+				// counter++;
 			}
 		}
 
@@ -67,7 +74,7 @@ public class Handler{
 	void crossOut(int i){
 		int arrNum = i/14;
 		int bitNum = (i%14) >>1;
-		System.out.println("arrNum: " + arrNum + " bitNum  " + bitNum);
+		// System.out.println("arrNum: " + arrNum + " bitNum  " + bitNum);
 		bitArr[arrNum]= (byte) (bitArr[arrNum] & ~(1 << bitNum));
 	}
 	boolean isPrime (int k){
@@ -163,8 +170,8 @@ public class Handler{
 		System.out.println("tid pa sekvensiel faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");
 		System.out.println();
 	}
-	
-	
+
+
 
 
 

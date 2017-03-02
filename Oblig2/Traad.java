@@ -3,6 +3,7 @@ import java.util.LinkedHashMap;
 
 class Traad extends Thread{
 	private ArrayList<Integer> array;
+	// private int[] array;
 	private Handler obj;
 	private long[] arry;
 	private int id;

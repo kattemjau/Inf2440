@@ -8,8 +8,8 @@ public class Oblig2{
 		hand.erastothenesSil(antTall);
 		// hand.finnPrimtall(antTall);
 
-		// hand.finnParralellPrimtall(antTall);
-		// hand.printResult();
+		hand.finnParralellPrimtall(antTall);
+		hand.printResult();
 
 		}catch (Exception e){
 			e.printStackTrace();
