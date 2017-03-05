@@ -6,8 +6,8 @@ import java.util.LinkedHashMap;
 public class Handler{
 	// private ArrayList<Integer> array = new ArrayList<>();
 	private int cores=1;
-	private LinkedHashMap<Integer, LinkedHashMap<Long, String>> result = new LinkedHashMap<>();
-	
+	// private LinkedHashMap<Integer, LinkedHashMap<Long, String>> result = new LinkedHashMap<>();
+	private LinkedHashMap<String, Integer> tider = new LinkedHashMap<>();
 	private int maxtall;
 	private byte[] bitArr;
 
@@ -19,8 +19,8 @@ public class Handler{
 	}
 
 	void erastothenesSil(){
+		System.out.println("erastothenesSil");
 		bitArr = new byte [maxtall];
-		// (maxtall/14)+1
 		opprettArray(maxtall);
 
 		long ti = System.nanoTime();
@@ -34,33 +34,32 @@ public class Handler{
 					crossOut(i);
 					// System.out.println("fjerner index: " + i);
 					// System.out.println("tallet som blir fjernet er: " + i);
-
 				}
-
-
 			}
 			// System.out.println();
-
 		}
 		System.out.println("tid pa eratosthenesSil: " + ((System.nanoTime()-ti)/1000000.0) + " ms");
-
-
-		System.out.println("overforer svar til int array");
-				
-		long his = System.nanoTime();
-		// array[1]=2;
-		// int counter=1;
-		// for(int i=2; i<maxtall; i++){
-		// 	if(isPrime(i) && i!=0){
-		// 	// System.out.println("primtall: " + i);
-		// 		array.add(i);
-		// 		// array[counter]=i;
-		// 		// counter++;
-		// 	}
-		// }
-		System.out.println("tid brukt pa a overfore til arraylist: " + ((System.nanoTime()-his)/1000000.0) + " ms");
-
 	}
+	void parralellSil(){
+		System.out.println("parralellSil");
+		bitArr = new byte [maxtall];
+		opprettArray(maxtall);
+
+		Traad[] traadArray = new Traad[maxtall];
+
+		long ti = System.nanoTime();
+		int counter=0;
+		for(int e = nextPrime(2); e<212; e=nextPrime(e)){
+			traadArray[counter]=new Traad(true, maxtall, bitArr, e);
+			traadArray[counter].start();
+
+			// System.out.println();
+			counter++;
+		}
+		System.out.println("tid pa eratosthenesSil: " + ((System.nanoTime()-ti)/1000000.0) + " ms");
+	}
+
+
 
 
 	void crossOut(int i){
@@ -82,7 +81,7 @@ public class Handler{
 		return i;
 	}
 
-
+/*
 	void finnParralellPrimtall(){
 
 		//for lokke som starter alle traader
@@ -110,7 +109,7 @@ public class Handler{
 				antPrimtall++;
 			}
 			// System.out.println("test posisjon: " + arry[0] + " indesks: " + i);
-			// traadAr[i] = new Traad(array, this, arry, i);
+			traadAr[i] = new Traad(bitArr, this, arry, i, maxtall);
 			traadAr[i].start();
 
 		}
@@ -120,13 +119,15 @@ public class Handler{
 				e.join();
 			}catch(Exception y){}
 		}
-		System.out.println("tid pa parralell Faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");}
+		System.out.println("tid pa parralell Faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");
+	}
 	synchronized void parralellFaktorisering(LinkedHashMap<Long, String> result, int id){
 		//traadene gjor utskriften til en traad
 		//funksjonen lagrer løsningen
 		//synchronized er treig, best med minnst kall
 		//eventuell vente pa en spesifikk traad, to print them in sequence
-		this.result.put(id, result);}
+		this.result.put(id, result);
+	}
 
 	void printResult(){
 		int c=0;
@@ -144,9 +145,11 @@ public class Handler{
 
 			}
 		}
-/*
-*/
+
 	}
+	 */
+
+
 	void finnPrimtall(){
 		//sorterings algorithme for a finne primtall
 		// kun 2 er enseste partall som er primtall
@@ -163,22 +166,17 @@ public class Handler{
 		System.out.println("tid pa sekvensiel faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");
 		System.out.println();
 	}
+	void printPrim(){
 
+		for(int i=2; i<maxtall; i++){
+			if(isPrime(i) && i!=0){
+				System.out.println("primtall: " + i);
+			}
+		}
+	}
 
-
-
-
-
-
-
-//primtall = tall som bare er delelig på seg selv
-//sjekke om kan faktoriseres
-// if modula == 0 || primtall = true
-// rekursiv faktorisering if(n%i != 0){ System.out.print(n/i + " + "); rekursiv(n/i)}
 
 	void faktorisering(long tall){
-		//denne skal multithreades "tar lengst tid"
-
 		for(int i=2; i<maxtall; i=nextPrime(i)){
 			if(i==0){
 				return;
@@ -195,48 +193,7 @@ public class Handler{
 		}
 		System.out.print(tall);
 	}
-
-	/*
-	void eratosthenesSil(int maxtall){
-		System.out.println("eratosthenesSil");
-		opprettArray(maxtall);
-
-		long ti = System.nanoTime();
-		for(Integer e: erastothenes){
-			// System.out.println("testing for "+ e);
-			if(e<10 && e!=0){
-				int y=2;
-				for(int i=y*e; i<maxtall; i=(++y*e)){
-					erastothenes[i-2]=0;
-					// System.out.println("fjerner: " + i);
-					// System.out.println("Y = " + y);
-				}
-			}else if(e>10){
-				break;
-			}
-		}
-		System.out.println("tid pa eratosthenesSil: " + ((System.nanoTime()-ti)/1000000.0) + " ms");
-
-		for(Integer k: erastothenes){
-			if(k!=0){
-			// System.out.println("primtall: " + k);
-				array.add(k);
-			}
-		}
-
-
-		// for(int i=0;i<maxtall;i++){
-		// 	System.out.println(erastothenes[i]);
-		// }
-
-	} */
-
 	void opprettArray(int maxtall){
-		/*erastothenes=new int[maxtall];
-		for(int i=2; i<maxtall; i++){
-			erastothenes[i-2]=i;
-			// System.out.println(i);
-		}*/
 		for(int i=0; i<bitArr.length; i++){
 			bitArr[i]=(byte)127;
 		}
