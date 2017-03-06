@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 import java.util.concurrent.*;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 
 public class Handler{
 	// private ArrayList<Integer> array = new ArrayList<>();
 	private int cores=1;
 	// private LinkedHashMap<Integer, LinkedHashMap<Long, String>> result = new LinkedHashMap<>();
-	private LinkedHashMap<String, Integer> tider = new LinkedHashMap<>();
+	private HashMap<String, Double> tider = new HashMap<>();
 	private int maxtall;
 	private byte[] bitArr;
 
@@ -16,6 +16,12 @@ public class Handler{
 		cores = Runtime.getRuntime().availableProcessors();
 		System.out.println("ant traader: " + cores);
 		this.maxtall=maxtall;
+
+		erastothenesSil();
+		parralellSil();
+		// finnPrimtall();
+		// printTider();
+
 	}
 
 	void erastothenesSil(){
@@ -38,7 +44,9 @@ public class Handler{
 			}
 			// System.out.println();
 		}
-		System.out.println("tid pa eratosthenesSil: " + ((System.nanoTime()-ti)/1000000.0) + " ms");
+		long tid = System.nanoTime();
+		System.out.println("tid pa eratosthenesSil: " + ((tid-ti)/1000000.0) + " ms");
+		tider.put("eratosthenesSil", ((tid-ti)/1000000.0));
 	}
 	void parralellSil(){
 		System.out.println("parralellSil");
@@ -56,7 +64,17 @@ public class Handler{
 			// System.out.println();
 			counter++;
 		}
-		System.out.println("tid pa eratosthenesSil: " + ((System.nanoTime()-ti)/1000000.0) + " ms");
+		long tid = System.nanoTime();
+		System.out.println("tid pa parralellSil: " + ((tid-ti)/1000000.0) + " ms");
+		tider.put("parralellSil", ((tid-ti)/1000000.0));
+
+	}
+
+	void printTider(){
+		System.out.println();
+		for (String k: tider.keySet()) {
+			System.out.println("Tider for " + k + " " + tider.get(k));
+		}
 	}
 
 
@@ -121,7 +139,7 @@ public class Handler{
 		}
 		System.out.println("tid pa parralell Faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");
 	}
-	synchronized void parralellFaktorisering(LinkedHashMap<Long, String> result, int id){
+	synchronized void parralellFaktorisering(HashMap<Long, String> result, int id){
 		//traadene gjor utskriften til en traad
 		//funksjonen lagrer løsningen
 		//synchronized er treig, best med minnst kall
