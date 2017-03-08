@@ -17,13 +17,67 @@ public class Handler{
 		System.out.println("ant traader: " + cores);
 		this.maxtall=maxtall;
 
-		erastothenesSil();
+		// erastothenesSil();
 		parralellSil();
 		// finnPrimtall();
+		// parralellFakto();
+		// traadfaktorisering(100);
 		// printTider();
 
 	}
+	void parralellFakto(){
+		// Traad[] traadArray = new Traad[maxtall];
+		int tall=maxtall;
+		// tall=tall*tall;
 
+		long ti = System.nanoTime();
+
+		for(int i=tall-100; i<tall; i++){
+			int k = traadfaktorisering(i);
+		}
+
+		long tid = System.nanoTime();
+		System.out.println("tid pa parralellFakto: " + ((tid-ti)/1000000.0) + " ms");
+		tider.put("parralellFakto", ((tid-ti)/1000000.0));
+
+
+	}
+	private Traad[] fptraad;
+	private int number=0;
+
+	int traadfaktorisering(int i){
+		fptraad = new Traad[maxtall];
+		int counter=0;
+		for(int e = nextPrime(2); e<10; e=nextPrime(e)){
+			fptraad[counter]=new Traad(false, maxtall, bitArr, e, this);
+			fptraad[counter].start();
+
+			counter++;
+		}
+
+		counter=0;
+		while(counter <600000000){
+			if(number>0){
+				System.out.println(number);
+				int temp=number;
+				number=0;
+				return temp;
+			}
+		}
+		System.out.println("feil");
+		return 0;
+
+	}
+	synchronized void yes(int i){
+		number=i;
+		for(Traad e: fptraad){
+			try{
+				e.interrupt();
+			}catch(Exception y){
+			}
+		}
+
+	}
 	void erastothenesSil(){
 		System.out.println("erastothenesSil");
 		bitArr = new byte [maxtall];
@@ -49,7 +103,6 @@ public class Handler{
 		tider.put("eratosthenesSil", ((tid-ti)/1000000.0));
 	}
 	void parralellSil(){
-		System.out.println("parralellSil");
 		bitArr = new byte [maxtall];
 		opprettArray(maxtall);
 
@@ -58,7 +111,7 @@ public class Handler{
 		long ti = System.nanoTime();
 		int counter=0;
 		for(int e = nextPrime(2); e<212; e=nextPrime(e)){
-			traadArray[counter]=new Traad(true, maxtall, bitArr, e);
+			traadArray[counter]=new Traad(true, maxtall, bitArr, e, this);
 			traadArray[counter].start();
 
 			// System.out.println();
@@ -69,17 +122,12 @@ public class Handler{
 		tider.put("parralellSil", ((tid-ti)/1000000.0));
 
 	}
-
 	void printTider(){
 		System.out.println();
 		for (String k: tider.keySet()) {
 			System.out.println("Tider for " + k + " " + tider.get(k));
 		}
 	}
-
-
-
-
 	void crossOut(int i){
 		int arrNum = i/14;
 		int bitNum = (i%14) >>1;
@@ -98,75 +146,6 @@ public class Handler{
 		while(!isPrime(i)) i++;
 		return i;
 	}
-
-/*
-	void finnParralellPrimtall(){
-
-		//for lokke som starter alle traader
-		Traad[] traadAr = new Traad[cores];
-
-		int nr = 100/cores;
-		int rest = 100%cores;
-
-		long antPrimtall = maxtall;
-		antPrimtall=antPrimtall*antPrimtall - 100;
-		long tid = System.nanoTime();
-
-
-		//opretter ant traader
-		for(int i=0; i<cores; i++){
-
-			long[] arry;
-			if(i>cores-rest-1){arry = new long[nr+1];
-			}else{ arry = new long[nr];}
-			// System.out.println("arry lgnth" + arry.length);
-
-			for (int k=0; k<arry.length; k++) {
-				arry[k] = antPrimtall;
-				// System.out.println("arry : " + k);
-				antPrimtall++;
-			}
-			// System.out.println("test posisjon: " + arry[0] + " indesks: " + i);
-			traadAr[i] = new Traad(bitArr, this, arry, i, maxtall);
-			traadAr[i].start();
-
-		}
-
-		for(Traad e: traadAr){
-			try{
-				e.join();
-			}catch(Exception y){}
-		}
-		System.out.println("tid pa parralell Faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");
-	}
-	synchronized void parralellFaktorisering(HashMap<Long, String> result, int id){
-		//traadene gjor utskriften til en traad
-		//funksjonen lagrer løsningen
-		//synchronized er treig, best med minnst kall
-		//eventuell vente pa en spesifikk traad, to print them in sequence
-		this.result.put(id, result);
-	}
-
-	void printResult(){
-		int c=0;
-		for (int k: result.keySet()) {
-			if(k==c){
-				// System.out.println("rekkefolge: " + k);
-
-				for(String i: result.get(k).values()){
-						System.out.println(i);
-				}
-
-				c++;
-				printResult();
-				break;
-
-			}
-		}
-
-	}
-	 */
-
 
 	void finnPrimtall(){
 		//sorterings algorithme for a finne primtall
@@ -192,8 +171,6 @@ public class Handler{
 			}
 		}
 	}
-
-
 	void faktorisering(long tall){
 		for(int i=2; i<maxtall; i=nextPrime(i)){
 			if(i==0){
@@ -215,8 +192,5 @@ public class Handler{
 		for(int i=0; i<bitArr.length; i++){
 			bitArr[i]=(byte)127;
 		}
-
 	}
-
-
 }
