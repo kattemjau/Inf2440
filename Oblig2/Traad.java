@@ -4,13 +4,16 @@ class Traad extends Thread{
 	private int maxtall;
 	private int e;
 	private Handler ref;
+	private int slutt;
 
-	Traad(boolean sil, int maxtall, byte[] bitArr, int e, Handler ref){
+	Traad(boolean sil, int maxtall, byte[] bitArr, int e, Handler ref, int slutt){
 		this.sil=sil;
 		this.maxtall=maxtall;
 		this.bitArr=bitArr;
 		this.e=e;
 		this.ref=ref;
+		this.slutt=slutt;
+		// System.out.println(e);
 
 	}
 	public void run(){
@@ -21,24 +24,18 @@ class Traad extends Thread{
 		}
 	}
 	void faktorisering(){
-		int y=2;
-		for(int i=y*e; i<maxtall; i=++y*e){
-
+		for(int i=e; i<slutt; i=nextPrime(i)){
 			// i=nextPrime(i-1);
+			if(i==0){
+				return;
+			}
 
 			if(maxtall%i == 0){
-				if(maxtall/i ==1){
-					// System.out.print(i);
-					ref.yes(i);
-					return;
-				}
-				// System.out.print(i + " * ");
+			// System.out.println( "returns: " +i);
 				ref.yes(i);
 				return;
 			}
 		}
-		// ref.traadfaktorisering(ma);
-		// System.out.println(maxtall);
 	}
 
 	void pSil(){
@@ -58,11 +55,18 @@ class Traad extends Thread{
 		// System.out.println("arrNum: " + arrNum + " bitNum  " + bitNum);
 		bitArr[arrNum]= (byte) (bitArr[arrNum] & ~(1 << bitNum));
 	}
-	// int nextPrime(int i){
-	// 	i++;
-	// 	while(!isPrime(i)) i++;
-	// 	return i;
-	// }
+	int nextPrime(int i){
+		i++;
+		while(!isPrime(i)) i++;
+		return i;
+	}
+	boolean isPrime (int k){
+		if(k==2) return true;
+		if(k%2 == 0) return false;
+		int arrNum = k/14;
+		int bitNum = (k%14) >> 1;
+		return (bitArr[arrNum] & 1 << bitNum)  != 0;
+	}
 
 
 	/*
