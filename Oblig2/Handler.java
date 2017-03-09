@@ -17,37 +17,38 @@ public class Handler{
 		System.out.println("ant traader: " + cores);
 		this.maxtall=maxtall;
 
-		erastothenesSil();
-		// parralellSil();
-		// finnFeil();
+		// erastothenesSil();
+		parralellSil();				
+		// faktorisering(2000000003);
+ 		finnFeil();
 		// finnPrimtall();
-		parralellFakto();
+		// parralellFakto();
 		// traadfaktorisering(100);
 		// printTider();
 
 	}
 	void parralellFakto(){
 		// Traad[] traadArray = new Traad[maxtall];
-		int tall=maxtall;
-		// tall=tall*tall;	//tallene som skal faktoriseres
+		long tall=maxtall;
+		tall=tall*tall;	//tallene som skal faktoriseres
 
 		//lagrer faktoriseringen
-		ArrayList<Integer> fakro = new ArrayList<>();
+		ArrayList<Long> fakro = new ArrayList<>();
 
 		long ti = System.nanoTime();
-		int k=1;
-		for(int i=tall-100; i<tall; i++){
-		// int i=120;
+		long k=1;
+		for(long i=tall-20; i<tall; i++){
+		// long i=3999999999999999991L;
 		// System.out.println("i " + i);
 				k = traadfaktorisering(i);
 				fakro.add(k);
 				// System.out.println("k" + k);
-				int temp=i/k;
+				long temp=i/k;
 				// System.out.println("temp" + temp);
 			while(temp!=1 ) {
-				if(isPrime(temp)){
+				if(temp<maxtall && isPrime((int)temp)){
 					fakro.add(temp);
-					System.out.println("is prime" + temp);
+					// System.out.println("is prime" + temp);
 					break;
 				}
 				k = traadfaktorisering(temp);
@@ -55,7 +56,6 @@ public class Handler{
 				fakro.add(k);
 				temp=temp/k;
 				// System.out.println("temp" + temp);
-
 
 			}
 			System.out.print(i + " = ");
@@ -76,15 +76,14 @@ public class Handler{
 
 	}
 	private Traad[] fptraad;
-	private int number=1;
+	private long number=1;
 
-	int traadfaktorisering(int kmam){
+	long traadfaktorisering(long kmam){
 		fptraad = new Traad[cores];
 		int counter=0;
 		number=kmam;
 
-		int nr = kmam/cores;
-		int rest = kmam%cores;
+		long nr = maxtall/cores;
 		if(kmam%2==0){
 			return 2;
 		}if(kmam%3==0){
@@ -94,16 +93,15 @@ public class Handler{
 		}if(kmam%7==0){
 			return 7;
 		}
-		int start=0;
-		int slutt=nr;
+		long start=2;
+		long slutt=nr;
 		for(int i=0; i<cores; i++){
 
-			if(i==cores-rest-1){nr++;}
-			slutt=start+nr;
 			fptraad[counter]=new Traad(false, kmam, bitArr, start, this, slutt);
 			// System.out.println("checking from: " + start + " til " + slutt);
 			fptraad[counter].start();
-			start=++slutt;
+			start=slutt;
+			slutt=start+nr;
 			counter++;
 		}
 
@@ -120,7 +118,7 @@ public class Handler{
 		return number;
 
 	}
-	synchronized void yes(int i){
+	synchronized void yes(long i){
 		// System.out.println(number);
 		number=i;
 		for(Traad e: fptraad){
@@ -136,8 +134,6 @@ public class Handler{
 		bitArr = new byte [maxtall];
 		opprettArray(maxtall);
 		int lilleTabellen = (int) Math.sqrt(maxtall) + 1;
-
-		System.out.println("lilleTabellen" + lilleTabellen);
 
 		long ti = System.nanoTime();
 
@@ -157,11 +153,11 @@ public class Handler{
 		System.out.println("tid pa eratosthenesSil: " + ((tid-ti)/1000000.0) + " ms");
 		tider.put("eratosthenesSil", ((tid-ti)/1000000.0));
 	}
+
 	void parralellSil(){
 		bitArr = new byte [maxtall];
 		opprettArray(maxtall);
 		int lilleTabellen = (int) Math.sqrt(maxtall) + 1;
-
 
 		Traad[] traadArray = new Traad[lilleTabellen];
 
@@ -170,10 +166,26 @@ public class Handler{
 		for(int e = nextPrime(2); e<lilleTabellen; e=nextPrime(e)){
 			traadArray[counter]=new Traad(true, maxtall, bitArr, e, this, 0);
 			traadArray[counter].start();
+			if(counter<cores){
+				try{
+				traadArray[counter].sleep(counter*100);
+				}catch(Exception kne){
+
+				}
+				
+			}
 
 			// System.out.println();
 			counter++;
 		}
+
+		for(Traad e: traadArray){
+			try{
+				e.join();
+			}catch(Exception y){
+			}
+		}
+
 		long tid = System.nanoTime();
 		System.out.println("tid pa parralellSil: " + ((tid-ti)/1000000.0) + " ms");
 		tider.put("parralellSil", ((tid-ti)/1000000.0));
@@ -235,9 +247,9 @@ public class Handler{
 				return;
 			}
 
-			System.out.print(e + " = ");
+			// System.out.print(e + " = ");
 			faktorisering(e);
-			System.out.println(" ");
+			// System.out.println(" ");
 
 
 		}
@@ -249,15 +261,16 @@ public class Handler{
 			}
 			if(tall%i == 0){
 				if(tall/i ==1){
-					System.out.print(i);
+					// System.out.print(i);
 					return;
 				}
-				System.out.print(i + " * ");
+				System.out.println(i + " * ");
+				System.out.println(tall);
 				faktorisering(tall/i);
 				return;
 			}
 		}
-		System.out.print(tall);
+		// System.out.print(tall);
 		return;
 	}
 	void opprettArray(int maxtall){

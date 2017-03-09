@@ -1,12 +1,12 @@
 class Traad extends Thread{
 	private boolean sil = false;
 	private byte[] bitArr;
-	private int maxtall;
-	private int e;
+	private long maxtall;
+	private long e;
 	private Handler ref;
-	private int slutt;
+	private long slutt;
 
-	Traad(boolean sil, int maxtall, byte[] bitArr, int e, Handler ref, int slutt){
+	Traad(boolean sil, long maxtall, byte[] bitArr, long e, Handler ref, long slutt){
 		this.sil=sil;
 		this.maxtall=maxtall;
 		this.bitArr=bitArr;
@@ -20,12 +20,14 @@ class Traad extends Thread{
 		if(sil==true){
 			pSil();
 		}else{
+		// System.out.println("starting thread");
 			faktorisering();
 		}
 	}
 	void faktorisering(){
-		for(int i=e; i<slutt; i=nextPrime(i)){
-			// i=nextPrime(i-1);
+		for(long i=e; i<slutt; i=nextPrime((int)i)){
+			i=nextPrime((int)i-1);
+
 			if(i==0){
 				return;
 			}
@@ -39,13 +41,13 @@ class Traad extends Thread{
 	}
 
 	void pSil(){
+		int n = (int) e;
 		int y=2;
-		for(int i=y*e; i<maxtall; i=++y*e){
+		for(int i=y*n; i<maxtall; i=++y*n){
 			if((i & 1) != 0){
 
 				crossOut(i);
-				// System.out.println("fjerner index: " + i);
-				// System.out.println("tallet som blir fjernet er: " + i);
+
 			}
 		}
 	}
