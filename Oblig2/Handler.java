@@ -17,11 +17,11 @@ public class Handler{
 		System.out.println("ant traader: " + cores);
 		this.maxtall=maxtall;
 
-		// erastothenesSil();
-		parralellSil();
-		finnFeil();
+		erastothenesSil();
+		// parralellSil();
+		// finnFeil();
 		// finnPrimtall();
-		// parralellFakto();
+		parralellFakto();
 		// traadfaktorisering(100);
 		// printTider();
 
@@ -32,28 +32,31 @@ public class Handler{
 		// tall=tall*tall;	//tallene som skal faktoriseres
 
 		//lagrer faktoriseringen
-		ArrayList<Integer> fakro = new ArrayList<>(); 
+		ArrayList<Integer> fakro = new ArrayList<>();
 
 		long ti = System.nanoTime();
 		int k=1;
-		// for(int i=tall-100; i<tall; i++){
-		int i=100;
+		for(int i=tall-100; i<tall; i++){
+		// int i=120;
+		// System.out.println("i " + i);
 				k = traadfaktorisering(i);
 				fakro.add(k);
-				System.out.println("k" + k);
-				int temp=maxtall/k;
-				System.out.println("temp" + temp);
-			while(temp!=1 && temp!=0) {
-				k = traadfaktorisering(temp/k);				
-				System.out.println("k" + k);
-
-				fakro.add(k);
-				if(k==0){
-					temp=0;
-				}else{
-				temp=temp/k;
-					
+				// System.out.println("k" + k);
+				int temp=i/k;
+				// System.out.println("temp" + temp);
+			while(temp!=1 ) {
+				if(isPrime(temp)){
+					fakro.add(temp);
+					System.out.println("is prime" + temp);
+					break;
 				}
+				k = traadfaktorisering(temp);
+				// System.out.println("k" + k);
+				fakro.add(k);
+				temp=temp/k;
+				// System.out.println("temp" + temp);
+
+
 			}
 			System.out.print(i + " = ");
 			System.out.print(fakro.get(0));
@@ -61,8 +64,9 @@ public class Handler{
 				System.out.print(" * ");
 				System.out.print(fakro.get(e));
 			}
+			fakro.clear();
 			System.out.println();
-		// }
+		}
 
 		long tid = System.nanoTime();
 		System.out.println("tid pa parralellFakto: " + ((tid-ti)/1000000.0) + " ms");
@@ -75,7 +79,7 @@ public class Handler{
 	private int number=1;
 
 	int traadfaktorisering(int kmam){
-		fptraad = new Traad[maxtall];
+		fptraad = new Traad[cores];
 		int counter=0;
 		number=kmam;
 
@@ -83,13 +87,23 @@ public class Handler{
 		int rest = kmam%cores;
 		if(kmam%2==0){
 			return 2;
+		}if(kmam%3==0){
+			return 3;
+		}if(kmam%5==0){
+			return 5;
+		}if(kmam%7==0){
+			return 7;
 		}
+		int start=0;
+		int slutt=nr;
 		for(int i=0; i<cores; i++){
 
 			if(i==cores-rest-1){nr++;}
-
-			fptraad[counter]=new Traad(false, kmam, bitArr, i*nr, this, i*nr+nr);
+			slutt=start+nr;
+			fptraad[counter]=new Traad(false, kmam, bitArr, start, this, slutt);
+			// System.out.println("checking from: " + start + " til " + slutt);
 			fptraad[counter].start();
+			start=++slutt;
 			counter++;
 		}
 
@@ -99,19 +113,22 @@ public class Handler{
 			}catch(Exception y){
 			}
 		}
-		System.out.println("number: " + number);
+		// System.out.println("number: " + number);
+		if(number==1){
+			return kmam;
+		}
 		return number;
 
 	}
 	synchronized void yes(int i){
 		// System.out.println(number);
+		number=i;
 		for(Traad e: fptraad){
 			try{
 				e.interrupt();
 			}catch(Exception y){
 			}
 		}
-		number=i;
 
 	}
 	void erastothenesSil(){
@@ -217,12 +234,12 @@ public class Handler{
 				System.out.println("no error");
 				return;
 			}
-			
+
 			System.out.print(e + " = ");
 			faktorisering(e);
 			System.out.println(" ");
 
-			
+
 		}
 	}
 	void faktorisering(long tall){
