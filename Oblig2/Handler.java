@@ -1,6 +1,5 @@
-import java.util.ArrayList;
-// import java.util.concurrent.*;
-import java.util.HashMap;
+import java.util.*;
+import  java.lang.System;
 
 
 public class Handler{
@@ -17,13 +16,11 @@ public class Handler{
 		System.out.println("ant traader: " + cores);
 		this.maxtall=maxtall;
 
-		// erastothenesSil();
-		parralellSil();				
-		// faktorisering(2000000003);
- 		finnFeil();
+		// parralellSil();
+		erastothenesSil(maxtall);
 		// finnPrimtall();
-		// parralellFakto();
-		// traadfaktorisering(100);
+		parralellFakto();
+		// 	finnFeil();
 		// printTider();
 
 	}
@@ -37,7 +34,7 @@ public class Handler{
 
 		long ti = System.nanoTime();
 		long k=1;
-		for(long i=tall-20; i<tall; i++){
+		for(long i=tall-100; i<tall; i++){
 		// long i=3999999999999999991L;
 		// System.out.println("i " + i);
 				k = traadfaktorisering(i);
@@ -129,11 +126,10 @@ public class Handler{
 		}
 
 	}
-	void erastothenesSil(){
-		System.out.println("erastothenesSil");
+	void erastothenesSil(int tall){
 		bitArr = new byte [maxtall];
 		opprettArray(maxtall);
-		int lilleTabellen = (int) Math.sqrt(maxtall) + 1;
+		int lilleTabellen = (int) Math.sqrt(tall) + 1;
 
 		long ti = System.nanoTime();
 
@@ -141,7 +137,7 @@ public class Handler{
 			// System.out.println("testing for "+ e);
 
 			int y=2;
-			for(int i=y*e; i<maxtall; i=++y*e){
+			for(int i=y*e; i<tall; i=++y*e){
 				if((i & 1) != 0){
 					crossOut(i);
 					// System.out.println("fjerner tall: " + i);
@@ -154,26 +150,21 @@ public class Handler{
 		tider.put("eratosthenesSil", ((tid-ti)/1000000.0));
 	}
 
-	void parralellSil(){
-		bitArr = new byte [maxtall];
-		opprettArray(maxtall);
-		int lilleTabellen = (int) Math.sqrt(maxtall) + 1;
 
+	void parralellSil(){
+		// bitArr = new byte [maxtall];
+		// opprettArray(maxtall);
+		int lilleTabellen = (int) Math.sqrt(maxtall) + 1;
 		Traad[] traadArray = new Traad[lilleTabellen];
 
-		long ti = System.nanoTime();
-		int counter=0;
-		for(int e = nextPrime(2); e<lilleTabellen; e=nextPrime(e)){
-			traadArray[counter]=new Traad(true, maxtall, bitArr, e, this, 0);
-			traadArray[counter].start();
-			if(counter<cores){
-				try{
-				traadArray[counter].sleep(counter*100);
-				}catch(Exception kne){
 
-				}
-				
-			}
+		long ti = System.nanoTime();
+		erastothenesSil(lilleTabellen);
+		int counter=0;
+
+		for(int e = nextPrime(2); e<lilleTabellen; e=nextPrime(e)){
+			traadArray[counter]=new Traad(true, maxtall, bitArr, e, this, counter);
+			traadArray[counter].start();
 
 			// System.out.println();
 			counter++;
@@ -261,16 +252,18 @@ public class Handler{
 			}
 			if(tall%i == 0){
 				if(tall/i ==1){
-					// System.out.print(i);
+					//kommenter ut den under for debug mode
+					System.out.print(i);
 					return;
 				}
-				System.out.println(i + " * ");
-				System.out.println(tall);
+				//kommenter ut den under for debug mode
+				System.out.print(i + " * ");
 				faktorisering(tall/i);
 				return;
 			}
 		}
-		// System.out.print(tall);
+		//kommenter ut den under for debug mode
+		System.out.print(tall);
 		return;
 	}
 	void opprettArray(int maxtall){

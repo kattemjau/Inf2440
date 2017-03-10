@@ -13,7 +13,6 @@ class Traad extends Thread{
 		this.e=e;
 		this.ref=ref;
 		this.slutt=slutt;
-		// System.out.println(e);
 
 	}
 	public void run(){
@@ -45,7 +44,6 @@ class Traad extends Thread{
 		int y=2;
 		for(int i=y*n; i<maxtall; i=++y*n){
 			if((i & 1) != 0){
-
 				crossOut(i);
 
 			}
@@ -55,6 +53,7 @@ class Traad extends Thread{
 		int arrNum = i/14;
 		int bitNum = (i%14) >>1;
 		// System.out.println("arrNum: " + arrNum + " bitNum  " + bitNum);
+
 		bitArr[arrNum]= (byte) (bitArr[arrNum] & ~(1 << bitNum));
 	}
 	int nextPrime(int i){
@@ -69,38 +68,4 @@ class Traad extends Thread{
 		int bitNum = (k%14) >> 1;
 		return (bitArr[arrNum] & 1 << bitNum)  != 0;
 	}
-
-
-	/*
-	public void run(){
-		//faktoriserer for et tall
-		for(int i=0; i<arry.length; i++){
-			String utskrift = Long.toString(arry[i]);
-			// System.out.println("utskrift: " + utskrift);
-			utskrift += " = ";
-			utskrift += faktorisering(arry[i]);
-
-
-			result.put(arry[i], utskrift);
-		}
-		obj.parralellFaktorisering(result, id);
-
-	}
-	String faktorisering(long tall) {
-		for(int i=2; i<maxtall; i=nextPrime(i)){
-			if(i==0){
-				return "error";
-			}
-			if(tall%i == 0){
-				if(tall/i ==1){
-					return Integer.toString(i);
-				}
-				return i + " * " + faktorisering(tall/i);
-			}
-		}
-		return Long.toString(tall);
-	}
-	*/
-
-
 }
