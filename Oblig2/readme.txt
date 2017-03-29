@@ -1,3 +1,8 @@
+OPPDATERING:
+fikset kjøretiden på sekvensiel og parralell tid.
+
+
+
 Kjøring av programmet gjøres med:
 
 javac *.java && java -Xmx14000m Oblig2 2000000000

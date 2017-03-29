@@ -16,9 +16,9 @@ public class Handler{
 		System.out.println("ant traader: " + cores);
 		this.maxtall=maxtall;
 
-		// parralellSil();
 		erastothenesSil(maxtall);
-		// finnPrimtall();
+		finnPrimtall();
+		parralellSil();
 		parralellFakto();
 		// 	finnFeil();
 		// printTider();
@@ -80,7 +80,8 @@ public class Handler{
 		int counter=0;
 		number=kmam;
 
-		long nr = maxtall/cores;
+		int sqrt= (int) Math.sqrt(kmam);
+		long nr = sqrt/cores;
 		if(kmam%2==0){
 			return 2;
 		}if(kmam%3==0){
@@ -90,8 +91,8 @@ public class Handler{
 		}if(kmam%7==0){
 			return 7;
 		}
-		long start=2;
-		long slutt=nr;
+		long start=7;
+		long slutt=nr+(sqrt%cores);
 		for(int i=0; i<cores; i++){
 
 			fptraad[counter]=new Traad(false, kmam, bitArr, start, this, slutt);
@@ -108,7 +109,7 @@ public class Handler{
 			}catch(Exception y){
 			}
 		}
-		// System.out.println("number: " + number);
+
 		if(number==1){
 			return kmam;
 		}
@@ -246,7 +247,8 @@ public class Handler{
 		}
 	}
 	void faktorisering(long tall){
-		for(int i=2; i<maxtall; i=nextPrime(i)){
+		int sqrt = (int)Math.sqrt(tall);
+		for(int i=2; i<sqrt; i=nextPrime(i)){
 			if(i==0){
 				return;
 			}
