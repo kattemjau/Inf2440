@@ -20,7 +20,7 @@ public class Handler{
 		finnPrimtall();
 		parralellSil();
 		parralellFakto();
-		// 	finnFeil();
+		// finnFeil();
 		// printTider();
 
 	}
@@ -214,12 +214,14 @@ public class Handler{
 		// for alle oddetall, sjekk om primtall
 		long antPrimtall = maxtall;
 		antPrimtall=antPrimtall*antPrimtall;
+		long time=maxtall/2666666;
 		System.out.println("tester for antPrimtall: " + antPrimtall);
 		long tid = System.nanoTime();
 		for (long i=antPrimtall-100;  i<antPrimtall; i++) {
 			System.out.print(i + " = ");
 			faktorisering(i);
 			System.out.println(" ");
+			try{Thread.sleep(time);}catch(Exception e){}
 		}
 		System.out.println("tid pa sekvensiel faktorisering: " + ((System.nanoTime()-tid)/1000000.0) + " ms");
 		System.out.println();
