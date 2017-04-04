@@ -89,14 +89,16 @@ class MultiRadix{
 	 	for (int i = 0; i < n; i++) {
 	 		count[(a[i]>>> shift) & mask]++;
 	 	}
+	 	// for(int i=0; i<mask; i++){
+	 	// 	System.out.print(count[i]);
+	 	// }
 
 		  // finner threads og oppretter threadpool
 	 	int cores = Runtime.getRuntime().availableProcessors();
-	 	ExecutorService pool = Executors.newFixedThreadPool(cores);
+	 	ExecutorService pool = Executors.newFixedThreadPool(cores+1);
 
 	 	//liste med thread pekere
 	 	List <Future> liste = new Vector <Future>();
-
 
 	 	int nr=(mask+1)/cores;
 	 	int rest= (mask+1)%cores;
@@ -104,48 +106,48 @@ class MultiRadix{
 		// System.out.println("total: " + (nr*cores+rest));
 
 	 	int start=0, slutt=nr+rest;
-		sorted=new int[cores][slutt];
+		sorted=new int[cores][];
 
 		 // c) Add up in 'count' - accumulated values
 	 	for (int w =0; w < cores; w++) {
-
+	 		sorted[w]= new int[slutt-start];
 			Thread traad = new Thread(new FindCount(w, start, slutt, Arrays.copyOf(count, count.length), this));
-			System.out.println("sorts from: " + start + " to " + slutt);
+			// System.out.println("sorts from: " + start + " to " + slutt);
  			liste.add(pool.submit(traad)); // submit starter tråden
  			start=slutt;
  			slutt=start+nr;
  		}
-
+ 		//test print
 		// printSorted();
-/*
-		System.out.println(count.length);
+		pool.shutdown();
+
+		//2d til 1d array (sorted[i-1][sorted[i-1].length-1])
 		int teller=0;
 		int lastLength=0;
 		for(int i =0; i<cores; i++){
-			System.out.println(sorted[i].length-1);
-			for(int k=1; k<(nr+rest); k++){
-				// System.out.println(teller);
-				if(sorted[i][k]==0){
-					lastLength=k;
-					break;
-				}
+			if(i>0)lastLength=count[teller-1];
+			System.out.println("lastlength " +lastLength);
+			for(int k=1; k<sorted[i].length; k++){
+				// if(sorted[i][k]==0){
+				// 	lastLength=k;
+				// 	break;
+				// }
+					// System.out.println(sorted[i][k] + " " + lastLength);
+					count[teller]=((sorted[i][k])+lastLength);
 
-				if(i>0){
-					count[teller]=((sorted[i][k])+(sorted[i-1][lastLength]));
-				}
-				else{
-					count[teller]=sorted[i][k];
-				}
+
 				teller++;
 			}
 		}
-		System.out.println("count");
-		for(int i =0; i<sorted.length; i++){
-			System.out.println(count[i]);
-		}
-*/
-		pool.shutdown();
+		System.out.println("teller ." + teller);
 
+		while(teller<count.length){count[teller]=lastLength; teller++;}
+
+		//debug print av hele count. burde vere i stigende rekkefolge.
+		for(int i=0; i<count.length;i++)	System.out.println(count[i]);
+
+		sorted=null;
+		
 
 		 // d) move numbers in sorted order a to b
  		for (int i = 0; i < n; i++) {
@@ -156,9 +158,12 @@ class MultiRadix{
 
 	private int[][] sorted;
 	synchronized void schmood(int index, int[] arr, int slutt, int start){
+		 			// if(index==11)
+
 		// System.out.println("INDEX: " + index);
 		for(int i=0; i<slutt-start; i++){
 			sorted[index][i]=arr[start+i];
+			// if(index==11)
 			// System.out.println(arr[start+i]);
 		}
 	}
@@ -178,7 +183,7 @@ class MultiRadix{
 	void testSort(int [] a){
 		for (int i = 0; i< a.length-1;i++) {
 			if (a[i] > a[i+1]){
-				System.out.println("SorteringsFEIL på plass: "+i +" a["+i+"]:"+a[i]+" > a["+(i+1)+"]:"+a[i+1]);
+				System.out.println("SorteringsFEIL pa plass: "+i +" a["+i+"]:"+a[i]+" > a["+(i+1)+"]:"+a[i+1]);
 				return;
 			}
 		}

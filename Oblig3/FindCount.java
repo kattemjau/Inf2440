@@ -17,7 +17,7 @@ class FindCount implements Runnable{
 
 	}
 	public void run(){
-		System.out.println("THREAD START " + index);
+		// System.out.println("THREAD START " + index);
 		int j;
 		// endre for starts verdi i array copien
  		for (int i = start; i <= slutt; i++) {
