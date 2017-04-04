@@ -2,7 +2,8 @@ import java.util.*;
 import java.util.concurrent.*;
 /***********************************************************
 * Oblig 3 - sekvensiell kode, INF2440 v2017.
-*            Ifi, Uio, Arne Maus
+*           Mal laget av: Ifi, Uio, Arne Maus
+						Parralisering av: $<, Sindrech
 * for store verdier av n > 100 m, kjør (f.eks):
 *     >java -Xmx16000m MultiRadix 1000000000
 ************************************************************/
@@ -20,6 +21,7 @@ class MultiRadix{
 			test.doIt(n);
 		}
 	} // end main
+
 
 	void doIt (int len) {
 		a = new int[len];
@@ -81,6 +83,7 @@ class MultiRadix{
 	 	int  acumVal = 0, j, n = a.length;
 	 	int mask = (1<<maskLen) -1;
 	 	int [] count = new int [mask+1];
+		// System.out.println(count.length);
 
 		 // b) count=the frequency of each radix value in a
 	 	for (int i = 0; i < n; i++) {
@@ -94,18 +97,54 @@ class MultiRadix{
 	 	//liste med thread pekere
 	 	List <Future> liste = new Vector <Future>();
 
-	 	int nr=mask/cores;
-	 	int rest= mask%cores;
 
-	 	int start=0, slutt=start+nr+rest;
+	 	int nr=(mask+1)/cores;
+	 	int rest= (mask+1)%cores;
+
+		// System.out.println("total: " + (nr*cores+rest));
+
+	 	int start=0, slutt=nr+rest;
+		sorted=new int[cores][slutt];
 
 		 // c) Add up in 'count' - accumulated values
 	 	for (int w =0; w < cores; w++) {
-	 		Thread traad = new Thread(new FindCount(w, start, slutt, Arrays.copyOf(count, count.length), acumVal));
- 			liste.add(pool.submit(traad)); // submit starter trtåden
+
+			Thread traad = new Thread(new FindCount(w, start, slutt, Arrays.copyOf(count, count.length), this));
+			System.out.println("sorts from: " + start + " to " + slutt);
+ 			liste.add(pool.submit(traad)); // submit starter tråden
  			start=slutt;
  			slutt=start+nr;
  		}
+
+		// printSorted();
+/*
+		System.out.println(count.length);
+		int teller=0;
+		int lastLength=0;
+		for(int i =0; i<cores; i++){
+			System.out.println(sorted[i].length-1);
+			for(int k=1; k<(nr+rest); k++){
+				// System.out.println(teller);
+				if(sorted[i][k]==0){
+					lastLength=k;
+					break;
+				}
+
+				if(i>0){
+					count[teller]=((sorted[i][k])+(sorted[i-1][lastLength]));
+				}
+				else{
+					count[teller]=sorted[i][k];
+				}
+				teller++;
+			}
+		}
+		System.out.println("count");
+		for(int i =0; i<sorted.length; i++){
+			System.out.println(count[i]);
+		}
+*/
+		pool.shutdown();
 
 
 		 // d) move numbers in sorted order a to b
@@ -114,9 +153,27 @@ class MultiRadix{
  		}
 
 	}// end radixSort
-	synchronized void settSammen(){
-		
+
+	private int[][] sorted;
+	synchronized void schmood(int index, int[] arr, int slutt, int start){
+		// System.out.println("INDEX: " + index);
+		for(int i=0; i<slutt-start; i++){
+			sorted[index][i]=arr[start+i];
+			// System.out.println(arr[start+i]);
+		}
 	}
+	void printSorted(){
+		// System.out.println(sorted[i].length-1);
+		for(int i =0; i<sorted.length; i++){
+			System.out.println("Index: " + i + " = ");
+			for(int k=1; k<sorted[i].length; k++){
+				System.out.print(sorted[i][k] + " ");
+
+			}
+			System.out.println();
+		}
+	}
+
 
 	void testSort(int [] a){
 		for (int i = 0; i< a.length-1;i++) {

@@ -1,9 +1,6 @@
 # kjor make ARGS="tallverdi"
 # for a endre args
-
-
 ARGS=1000
-
 
 All: compile run
 
