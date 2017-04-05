@@ -116,6 +116,7 @@ class MultiRadix{
  			liste.add(pool.submit(traad)); // submit starter tråden
  			start=slutt;
  			slutt=start+nr;
+				try{Thread.sleep(100);}catch(Exception e){}
  		}
  		//test print
 		// printSorted();
@@ -126,7 +127,7 @@ class MultiRadix{
 		int lastLength=0;
 		for(int i =0; i<cores; i++){
 			if(i>0)lastLength=count[teller-1];
-			System.out.println("lastlength " +lastLength);
+			//System.out.println("lastlength " +lastLength);
 			for(int k=1; k<sorted[i].length; k++){
 				// if(sorted[i][k]==0){
 				// 	lastLength=k;
@@ -139,15 +140,15 @@ class MultiRadix{
 				teller++;
 			}
 		}
-		System.out.println("teller ." + teller);
+		//System.out.println("teller ." + teller);
 
 		while(teller<count.length){count[teller]=lastLength; teller++;}
 
 		//debug print av hele count. burde vere i stigende rekkefolge.
-		for(int i=0; i<count.length;i++)	System.out.println(count[i]);
+		// for(int i=0; i<count.length;i++)	System.out.println(count[i]);
 
 		sorted=null;
-		
+
 
 		 // d) move numbers in sorted order a to b
  		for (int i = 0; i < n; i++) {

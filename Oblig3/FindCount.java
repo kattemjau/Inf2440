@@ -17,15 +17,16 @@ class FindCount implements Runnable{
 
 	}
 	public void run(){
-		// System.out.println("THREAD START " + index);
+		System.out.println("THREAD START " + index);
 		int j;
 		// endre for starts verdi i array copien
  		for (int i = start; i <= slutt; i++) {
-			// System.out.println(acumVal);
+			System.out.print(count[i]);
  			j = count[i];
  			count[i] = acumVal;
  			acumVal += j;
  		}
+		System.out.println();
 		/*
 		int[] array=new int[slutt-start];
 		for(int i=0; i<slutt-start; i++){
