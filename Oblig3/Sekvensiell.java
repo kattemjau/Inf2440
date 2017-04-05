@@ -1,7 +1,8 @@
 import java.util.*;
+import java.util.concurrent.*;
 /***********************************************************
 * Oblig 3 - sekvensiell kode, INF2440 v2017.
-*            Ifi, Uio, Arne Maus
+*            Ifi, Uio, Arne schmos
 * for store verdier av n > 100 m, kjør (f.eks):
 *     >java -Xmx16000m MultiRadix 1000000000
 ************************************************************/
@@ -84,23 +85,60 @@ class Sekvensiell{
 	 	}
 
 		 // c) Add up in 'count' - accumulated values
-	 	for (int i = 0; i <= mask; i++) {
+	 	for (int i = 0; i <= mask; i++){
 	 		j = count[i];
 	 		count[i] = acumVal;
 	 		acumVal += j;
 	 	}
 		   		//debug print av hele count. burde vere i stigende rekkefolge.
-	 	for(int i=0; i<count.length;i++)	System.out.println(count[i]);
+		// 	for(int i=0; i<count.length;i++)	System.out.println(count[i]);
 
 		 // d) move numbers in sorted order a to b
-	 	for (int i = 0; i < n; i++) {
-	 		b[count[(a[i]>>>shift) & mask]++] = a[i];
-	 	}
+		// 	for (int i = 0; i < n; i++) {
+	 // 		b[count[(a[i]>>>shift) & mask]++] = a[i];
+		// 	}
+
+		int cores = Runtime.getRuntime().availableProcessors();
+	 	ExecutorService pool = Executors.newFixedThreadPool(cores);
+	 	List <Future> liste = new Vector <Future>();
+		int nr=n/cores;
+	 	int rest= n%cores;
+	 	int start=0, slutt=nr+rest;
+		pointer = new int[cores];
+
+		for (int w =0; w < cores; w++) {
+			// 	sorted[w]= new int[slutt-start];
+			Thread traad = new Thread(new Traad(w, this, a, b, start, slutt, count, shift, mask));
+ 			liste.add(pool.submit(traad)); // submit starter tråden
+
+			start=slutt;
+			slutt=start+nr;
+			// start--;
+ 		}
+		// try{Thread.sleep(1000);}catch(Exception e){}
+		pool.shutdown();
+
+
 
 	}// end radixSort
+	int[] pointer;
+
+	public boolean cont(int i, int index){
+		if(i==0){
+			return false;
+		}
+		for (int k=0;k<pointer.length;k++) {
+			if(pointer[k]==i){
+				pointer[index]=i;
+				return true;
+			}
+		}
+		return false;
+	}
 
 	void testSort(int [] a){
 		for (int i = 0; i< a.length-1;i++) {
+			// System.out.println(a[i]);
 			if (a[i] > a[i+1]){
 				System.out.println("SorteringsFEIL på plass: "+i +" a["+i+"]:"+a[i]+" > a["+(i+1)+"]:"+a[i+1]);
 				return;

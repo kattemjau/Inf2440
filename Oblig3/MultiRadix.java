@@ -116,10 +116,9 @@ class MultiRadix{
  			liste.add(pool.submit(traad)); // submit starter tråden
  			start=slutt;
  			slutt=start+nr;
-				try{Thread.sleep(100);}catch(Exception e){}
  		}
  		//test print
-		// printSorted();
+		printSorted();
 		pool.shutdown();
 
 		//2d til 1d array (sorted[i-1][sorted[i-1].length-1])

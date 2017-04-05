@@ -3,7 +3,7 @@
 ARGS=1000
 
 
-All: compile run
+All: compile sek
 
 run:
 	java -Xmx14G MultiRadix ${ARGS}
@@ -11,8 +11,12 @@ run:
 sek:
 	java -Xmx14G Sekvensiell ${ARGS}
 
+fasit:
+	java -Xmx14G Sekv/MultiRadix ${ARGS}
+
 compile:
 	javac *.java
+	javac Sekv/*.java
 
 clean:
 	rm -r *.class
