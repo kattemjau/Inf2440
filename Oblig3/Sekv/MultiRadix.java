@@ -7,7 +7,7 @@ import java.util.*;
 * for store verdier av n > 100 m, kjør (f.eks):
 *     >java -Xmx16000m MultiRadix 1000000000
 ************************************************************/
-class MultiRadix{
+public class MultiRadix{
 	int n;
 	int [] a;
 	final static int NUM_BIT = 7; // alle tall 6-11 .. finn ut hvilken verdi som er best
@@ -21,17 +21,21 @@ class MultiRadix{
 		}
 	} // end main
 
-	void doIt (int len) {
+	public double doIt (int len) {
+		long tt = System.nanoTime();
 		a = new int[len];
 		Random r = new Random(123);
 		for (int i =0; i < len;i++) {
 		   a[i] = r.nextInt(len);
 	    }
-	    a = radixMulti(a);
+
+			a = radixMulti(a);
+			double tid = (System.nanoTime() -tt)/ (double)1000000.0;
+			System.out.println("\nSorterte "+n+" tall paa:" + tid + "millisek.");
+			return tid;
 	} // end doIt
 
-    int []  radixMulti(int [] a) {
-		  long tt = System.nanoTime();
+    int[] radixMulti(int [] a) {
 		  // 1-5 digit radixSort of : a[]
 		  int max = a[0], numBit = 2, numDigits, n =a.length;
 		  int [] bit ;
@@ -67,8 +71,6 @@ class MultiRadix{
 			  System.arraycopy (a,0,b,0,a.length);
 		  }
 
-		  double tid = (System.nanoTime() -tt)/1000000.0;
-		  System.out.println("\nSorterte "+n+" tall paa:" + tid + "millisek.");
 		  testSort(a);
 		  return a;
 	 } // end radixMulti

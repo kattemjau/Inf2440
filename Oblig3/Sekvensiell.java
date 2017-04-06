@@ -10,12 +10,13 @@ class Sekvensiell{
 	int n;
 	int [] a;
 	final static int NUM_BIT = 7; // alle tall 6-11 .. finn ut hvilken verdi som er best
-
+	private static double sekvtid;
 	public static void main(String [] args) {
 		if (args.length != 1) {
 			System.out.println(" bruk : >java SekvensiellRadix <n> ");
 		} else {
 			int n = Integer.parseInt(args[0]);
+			sekvtid = new Sekv.MultiRadix().doIt(n);
 			new Sekvensiell().doIt(n);
 		}
 	} // end main
@@ -27,6 +28,7 @@ class Sekvensiell{
 			a[i] = r.nextInt(len);
 		}
 		a = radixMulti(a);
+		// for(int i=0; i<a.length;i++)	System.out.print(a[i] + " ");
 	} // end doIt
 
 	int []  radixMulti(int [] a) {
@@ -66,18 +68,18 @@ class Sekvensiell{
 				System.arraycopy (a,0,b,0,a.length);
 			}
 
-			double tid = (System.nanoTime() -tt)/1000000.0;
+			double tid = (System.nanoTime() -tt)/(double)1000000.0;
 			System.out.println("\nSorterte "+n+" tall paa:" + tid + "millisek.");
+			System.out.println("Speedup: " + (sekvtid/tid));
 			testSort(a);
 			return a;
 	 } // end radixMulti
-
 	 /** Sort a[] on one digit ; number of bits = maskLen, shiftet up 'shift' bits */
 	 void radixSort ( int [] a, int [] b, int maskLen, int shift){
 	 	System.out.println(" radixSort maskLen:"+maskLen+", shift :"+shift);
 	 	int  acumVal = 0, j, n = a.length;
 	 	int mask = (1<<maskLen) -1;
-	 	int [] count = new int [mask+1];
+	 	int[] count = new int [mask+1];
 
 		 // b) count=the frequency of each radix value in a
 	 	for (int i = 0; i < n; i++) {
@@ -98,43 +100,42 @@ class Sekvensiell{
 	 // 		b[count[(a[i]>>>shift) & mask]++] = a[i];
 		// 	}
 
+		// 	ExecutorService pool = Executors.newFixedThreadPool(cores);
+		// 	List <Future> liste = new Vector <Future>();
 		int cores = Runtime.getRuntime().availableProcessors();
-	 	ExecutorService pool = Executors.newFixedThreadPool(cores);
-	 	List <Future> liste = new Vector <Future>();
+		cores=4;
 		int nr=n/cores;
 	 	int rest= n%cores;
 	 	int start=0, slutt=nr+rest;
-		pointer = new int[cores];
+		Traad[] array = new Traad[cores];
+		// array[0]= new Traad(0, this, a, b, start, slutt, count, shift, mask);
+		// array[0].start();
 
 		for (int w =0; w < cores; w++) {
 			// 	sorted[w]= new int[slutt-start];
-			Thread traad = new Thread(new Traad(w, this, a, b, start, slutt, count, shift, mask));
- 			liste.add(pool.submit(traad)); // submit starter tråden
-
+			// Thread traad = new Thread(new Traad(w, this, a, b, start, slutt, count, shift, mask));
+ 		// 	liste.add(pool.submit(traad)); // submit starter tråden
+			array[w]= new Traad(n, this, a, b, start, slutt, count, shift, mask);
+			array[w].start();
 			start=slutt;
 			slutt=start+nr;
+			// try{Thread.sleep(10s);}catch(Exception e){}
+
 			// start--;
  		}
-		// try{Thread.sleep(1000);}catch(Exception e){}
-		pool.shutdown();
+		// pool.shutdown();
+
+		for(Traad e: array){
+			try{
+				e.join();
+			}catch(Exception y){
+			}
+		}
 
 
 
 	}// end radixSort
-	int[] pointer;
 
-	public boolean cont(int i, int index){
-		if(i==0){
-			return false;
-		}
-		for (int k=0;k<pointer.length;k++) {
-			if(pointer[k]==i){
-				pointer[index]=i;
-				return true;
-			}
-		}
-		return false;
-	}
 
 	void testSort(int [] a){
 		for (int i = 0; i< a.length-1;i++) {

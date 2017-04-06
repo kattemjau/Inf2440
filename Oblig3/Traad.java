@@ -1,5 +1,5 @@
 
-class Traad implements Runnable{
+class Traad extends Thread{
 	int index;
 	int start;
 	int slutt;
@@ -23,12 +23,16 @@ class Traad implements Runnable{
 	}
 	public void run(){
 		 // d) move numbers in sorted order a to b
-		for (int i = start; i < slutt; i++) {
-			//venter pa tur til a skrive
-			int k=(a[i]>>>shift) & mask;
-			// System.out.println(k);
-			while(pointer.cont(k, index)){}
-			b[count[(a[i]>>>shift) & mask]++] = a[i];
+		//  System.out.println("Thread: " + index + " Starter paa : " + start + " slutter paa: " + slutt);
+		for (int i = 0; i < index; i++) {
+
+			int variabel = (a[i]>>>shift) & mask;
+			if(variabel>=start && variabel<slutt){
+				b[count[variabel]++] = a[i];
+
+			}
+
+			// pointer.cont(0, index);
 		}
 
 	}

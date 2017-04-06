@@ -6,13 +6,13 @@ ARGS=1000
 All: compile sek
 
 run:
-	java -Xmx14G MultiRadix ${ARGS}
+	java -Xmx16G MultiRadix ${ARGS}
 
 sek:
-	java -Xmx14G Sekvensiell ${ARGS}
+	java -Xmx16G Sekvensiell ${ARGS}
 
 fasit:
-	java -Xmx14G Sekv/MultiRadix ${ARGS}
+	java -Xmx16G Sekv/MultiRadix ${ARGS}
 
 compile:
 	javac *.java
