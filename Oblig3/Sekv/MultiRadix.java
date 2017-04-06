@@ -22,13 +22,13 @@ public class MultiRadix{
 	} // end main
 
 	public double doIt (int len) {
-		long tt = System.nanoTime();
 		a = new int[len];
 		Random r = new Random(123);
 		for (int i =0; i < len;i++) {
 		   a[i] = r.nextInt(len);
 	    }
 
+			long tt = System.nanoTime();
 			a = radixMulti(a);
 			double tid = (System.nanoTime() -tt)/ (double)1000000.0;
 			System.out.println("\nSorterte "+n+" tall paa:" + tid + "millisek.");
