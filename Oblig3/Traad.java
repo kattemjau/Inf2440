@@ -1,6 +1,6 @@
 
 class Traad extends Thread{
-	int index;
+	// int n;
 	int start;
 	int slutt;
 	int[] a;
@@ -9,8 +9,8 @@ class Traad extends Thread{
 	int mask, shift;
 
 
-	public Traad(int index, Sekvensiell pointer, int[] a, int[] b, int start, int slutt, int[] count, int shift, int mask){
-		this.index=index;
+	public Traad(Sekvensiell pointer, int[] a, int[] b, int start, int slutt, int[] count, int shift, int mask){
+		// this.n=n;
 		this.start=start;
 		this.slutt=slutt;
 		this.a=a;
@@ -22,17 +22,14 @@ class Traad extends Thread{
 
 	}
 	public void run(){
-		 // d) move numbers in sorted order a to b
-		//  System.out.println("Thread: " + index + " Starter paa : " + start + " slutter paa: " + slutt);
-		for (int i = 0; i < index; i++) {
-
-			int variabel = (a[i]>>>shift) & mask;
-			if(variabel>=start && variabel<slutt){
-				b[count[variabel]++] = a[i];
-
-			}
-
-			// pointer.cont(0, index);
+		int j, acumVal=0;
+		for (int i = 0; i <= mask; i++){
+			j = count[i];
+			count[i] = acumVal;
+			acumVal += j;
+		}
+		for (int i = start; i < pointer.n; i++) {
+				b[count[(a[i]>>>shift) & mask]++] = a[i];
 		}
 
 	}

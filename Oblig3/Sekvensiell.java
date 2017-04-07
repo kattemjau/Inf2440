@@ -30,7 +30,6 @@ class Sekvensiell{
 			a[i] = r.nextInt(len);
 		}
 		a = radixMulti(a);
-		// for(int i=0; i<a.length;i++)	System.out.print(a[i] + " ");
 	} // end doIt
 
 	int max;
@@ -86,14 +85,14 @@ class Sekvensiell{
 		}
 		// 	for(int i=0; i<count.length;i++)	System.out.println(count[i]);
 		// //erstatt denne
-		// if (bit.length%2 != 0 ) {
-		//   // et odde antall sifre, kopier innhold tilbake til original a[] (nå b)
-		// 	System.arraycopy (a,0,b,0,a.length);
-		// }
+		if (bit.length%2 == 0 ) {
+		  // et odde antall sifre, kopier innhold tilbake til original a[] (nå b)
+			System.arraycopy (b,0,a,0,a.length);
+		}
 
 		double tid = (System.nanoTime() -tt)/(double)1000000.0;
 		System.out.println("\nSorterte "+n+" tall paa:" + tid + "millisek.");
-		System.out.println("Speedup: " + (sekvtid/tid));
+		System.out.println("Speedup for n=" + n + " Speedup: " + (sekvtid/tid));
 		testSort(a);
 		return a;
 	} // end radixMulti
@@ -123,44 +122,41 @@ class Sekvensiell{
 
 
 		// c) Add up in 'count' - accumulated values
-		for (int i = 0; i <= mask; i++){
-			j = count[i];
-			count[i] = acumVal;
-			acumVal += j;
-		}
+		// for (int i = 0; i <= mask; i++){
+		// 	j = count[i];
+		// 	count[i] = acumVal;
+		// 	acumVal += j;
+		// }
 		//debug print av hele count. burde vere i stigende rekkefolge.
 
 		// d) move numbers in sorted order a to b
-			for (int i = 0; i < n; i++) {
-				b[count[(a[i]>>>shift) & mask]++] = a[i];
-			}
+			// for (int i = 0; i < n; i++) {
+			// 	b[count[(a[i]>>>shift) & mask]++] = a[i];
+			// }
 		// //
-		// int nr=n/cores;
-		// int rest= n%cores;
-		// int start=0, slutt=nr+rest;
-		// Traad[] array = new Traad[cores];
-		//
-		//
-		// for (int w =0; w < cores; w++) {
-		// 	array[w]= new Traad(n, this, a, b, start, slutt, count, shift, mask);
-		// 	array[w].start();
-		// 	start=slutt;
-		// 	slutt=start+nr;
-		// 	// try{Thread.sleep(10s);}catch(Exception e){}
-		// }
-		// for(Traad e: array){
-		// 	try{
-		// 		e.join();
-		// 	}catch(Exception y){
-		// 	}
-		// }
+		int nr=n/cores;
+		int rest= n%cores;
+		int start=0, slutt=nr+rest;
+		Traad[] array = new Traad[cores];
+
+		for (int w =0; w < cores; w++) {
+			array[w]= new Traad(this, a, b, start, slutt,count, shift, mask);
+			array[w].start();
+			start=slutt;
+			slutt=start+nr;
+		}
+		for(Traad e: array){
+			try{
+				e.join();
+			}catch(Exception y){
+			}
+		}
 
 	}// end radixSort
 
 
 	void testSort(int [] a){
 		for (int i = 0; i< a.length-1;i++) {
-			// System.out.println(a[i]);
 			if (a[i] > a[i+1]){
 				System.out.println("SorteringsFEIL på plass: "+i +" a["+i+"]:"+a[i]+" > a["+(i+1)+"]:"+a[i+1]);
 				return;
