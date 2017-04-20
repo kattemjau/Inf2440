@@ -61,7 +61,7 @@ class Sekvensiell{
 	// 	// 	}
 	// 	// }
 	// 	// System.out.println("MAxverdi: " + max);
-		
+
 	// 		//A)
 	// 	for (int i = 1 ; i < n ; i++)
 	// 		   if (a[i] > max) max = a[i];
@@ -102,7 +102,7 @@ class Sekvensiell{
 	// 	testSort(a);
 	// 	return a;
 	// } // end radixMulti
-	
+
 	int[] radixMulti(int [] a) {
 		  // 1-5 digit radixSort of : a[]
 		  int max = a[0], numBit = 2, numDigits, n =a.length;
@@ -160,11 +160,11 @@ class Sekvensiell{
 		// for (int i = 0; i < n; i++) {
 		// 	count[(a[i]>>> shift) & mask]++;
 		// }
-		
+
 		int nr=n/cores;
 		int start=0, slutt=nr+n%cores;
 		OppgB[] array = new OppgB[cores];
-		
+
 	    int[] allcount= new int[mask+1];
 		dobbelArray=new int[cores][slutt];
 		for (int w =0; w < cores; w++) {
@@ -191,15 +191,15 @@ class Sekvensiell{
 			}
 		}
 		// c) Add up in 'count' - accumulated values
-		for (int i = 0; i <= mask; i++){
-			j = count[i];
-			count[i] = acumVal;
-			acumVal += j;
-		}
+		// for (int i = 0; i <= mask; i++){
+		// 	j = count[i];
+		// 	count[i] = acumVal;
+		// 	acumVal += j;
+		// }
 		//prints count
 		// for (int i = 0; i < count.length; i++) {
 		// 	System.out.print(count[i] + " ");
-      
+
 		// }
 		// debug print av hele count. burde vere i stigende rekkefolge.
 

@@ -1,6 +1,6 @@
 class OppgB extends Thread{
   int start, slutt, shift, mask;
-  int[] count, a; 
+  int[] count, a;
   int[][] b;
   int index;
 
@@ -9,7 +9,7 @@ class OppgB extends Thread{
     // this.count=count;
     this.index=index;
     this.start=start;
-    count = new int [mask+1];
+    count = new int[mask+1];
     this.shift=shift;
     this.mask=mask;
     this.slutt=slutt;
@@ -23,18 +23,23 @@ class OppgB extends Thread{
 
     for (int i =start; i <slutt; i++) { //b finn allcount
       count[(a[i]>>> shift) & mask]++;
-      
+
     }
-    // for (int i = 0; i < count.length; i++) {
-    //   System.out.print(count[i] + " y ");
-      
-    // }
+    for (int i = 0; i <= mask; i++){
+			j = count[i];
+			count[i] = acumVal;
+			acumVal += j;
+		}
     for (int i=0;i<count.length ;i++ ) {
       b[index][i]=count[i];
       // allcount[count[i]]++;
     }
-   
 
+
+    // for (int i = 0; i < count.length; i++) {
+    //   System.out.print(count[i] + " y ");
+
+    // }
 
 
 
