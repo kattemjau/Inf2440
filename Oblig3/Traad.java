@@ -28,7 +28,7 @@ class Traad extends Thread{
 			count[i] = acumVal;
 			acumVal += j;
 		}
-		for (int i = start; i < pointer.n; i++) {
+		for (int i = start; i < slutt; i++) {
 				b[count[(a[i]>>>shift) & mask]++] = a[i];
 		}
 

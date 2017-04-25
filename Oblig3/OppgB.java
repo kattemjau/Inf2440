@@ -38,33 +38,36 @@ class OppgB extends Thread{
     // synkronisering
 
 
-    //telle opp hvor mange plasser før denne == startplass
+  }
+  public void oppgD(){
 
-    // oppg D felles
-    for (int i = start; i < slutt; i++) {
-				b[count[(a[i]>>>shift) & mask]++] = a[i];
-		}
+        //telle opp hvor mange plasser før denne == startplass
 
-    // Sette sammen deler fra D
+        // oppg D felles
+        for (int i = start; i < slutt; i++) {
+    				b[count[(a[i]>>>shift) & mask]++] = a[i];
+    		}
 
-
-
-    // for (int i = 0; i < count.length; i++) {
-    //   System.out.print(count[i] + " y ");
-
-    // }
+        // Sette sammen deler fra D
 
 
 
+        // for (int i = 0; i < count.length; i++) {
+        //   System.out.print(count[i] + " y ");
 
-    // for (int i =0; i <=mask; i++){ //c
-		// 	j = count[i];
-		// 	count[i] = acumVal;
-		// 	acumVal += j;
-		// }
-    // for (int i = start; i < slutt; i++) { //D
-    //   b[count[(a[i]>>>shift) & mask]++] = a[i];
-    // }
+        // }
+
+
+
+
+        // for (int i =0; i <=mask; i++){ //c
+    		// 	j = count[i];
+    		// 	count[i] = acumVal;
+    		// 	acumVal += j;
+    		// }
+        // for (int i = start; i < slutt; i++) { //D
+        //   b[count[(a[i]>>>shift) & mask]++] = a[i];
+        // }
 
   }
 }
