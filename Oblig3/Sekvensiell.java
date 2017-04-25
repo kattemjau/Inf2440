@@ -125,7 +125,7 @@ class Sekvensiell{
 		      if ( rest-- > 0)  bit[i]++;
 		  }
 
-		  int[] t=a, b = new int [n];
+		  int[] t=a, b = new int[n];
 
 		  for (int i =0; i < bit.length; i++) {
 			  radixSort( a,b,bit[i],sum );    // i-te siffer fra a[] til b[]
@@ -204,27 +204,30 @@ class Sekvensiell{
 		// debug print av hele count. burde vere i stigende rekkefolge.
 
 		// d) move numbers in sorted order a to b
-		for (int i = 0; i < n; i++) {
-			b[count[(a[i]>>>shift) & mask]++] = a[i];
-		}
-		//
+		// for (int i = 0; i < n; i++) {
+		// 	b[count[(a[i]>>>shift) & mask]++] = a[i];
+		// }
+
 		// int nr=n/cores;
 		// int rest= n%cores;
 		// int start=0, slutt=nr+rest;
-		// Traad[] array = new Traad[cores];
+		Traad[] array2 = new Traad[cores];
+		int[][] dobbelSort=new int[cores][n];
+		for (int w =0; w < cores; w++) {
+			array2[w]= new Traad(this, a, dobbelSort, start, slutt, count, shift, mask);
+			array2[w].start();
+			start=slutt;
+			slutt=start+nr;
+		}
+		for(Traad e: array2){
+			try{
+				e.join();
+			}catch(Exception y){
+			}
+		}
+		//TODO:sett inn i felles array i traaden?
 
-		// for (int w =0; w < cores; w++) {
-		// 	array[w]= new Traad(this, a, b, start, slutt,count, shift, mask);
-		// 	array[w].start();
-		// 	start=slutt;
-		// 	slutt=start+nr;
-		// }
-		// for(Traad e: array){
-		// 	try{
-		// 		e.join();
-		// 	}catch(Exception y){
-		// 	}
-		// }
+
 
 	}// end radixSort
 
