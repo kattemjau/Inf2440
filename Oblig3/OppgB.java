@@ -1,11 +1,11 @@
 class OppgB extends Thread{
   int start, slutt, shift, mask;
-  int[] count, a;
+  int[] count, a, bare, allcount;
   int[][] b;
   int index;
 
 
-  public OppgB(int index, int start, int slutt, int[] a, int[][] b, int shift, int mask){
+  public OppgB(int index, int start, int slutt, int[] a, int[][] b, int shift, int mask, int n, int[] allcount){
     // this.count=count;
     this.index=index;
     this.start=start;
@@ -15,6 +15,8 @@ class OppgB extends Thread{
     this.slutt=slutt;
     this.a=a;
     this.b=b;
+    bare = new int[n];
+    this.allcount=allcount;
   }
   public void run(){
     // System.out.println("index " + index);
@@ -40,12 +42,17 @@ class OppgB extends Thread{
 
   }
   public void oppgD(){
-
         //telle opp hvor mange plasser før denne == startplass
+        int[] plasser;
+
 
         // oppg D felles
         for (int i = start; i < slutt; i++) {
-    				b[count[(a[i]>>>shift) & mask]++] = a[i];
+          int pos = ((a[i]>>>shift) & mask);
+          // if(pos >= start && pos <= slutt){
+
+    			bare[(count[pos]++)+plasser[pos]] = a[i];
+        // }
     		}
 
         // Sette sammen deler fra D

@@ -24,6 +24,7 @@ class Sekvensiell{
 
 	void doIt (int len) {
 		cores = Runtime.getRuntime().availableProcessors();
+		cores=8;
 		a = new int[len];
 		Random r = new Random(123);
 		for (int i =0; i < len;i++) {
@@ -32,7 +33,7 @@ class Sekvensiell{
 		a = radixMulti(a);
 	} // end doIt
 
-	int max;
+	// int max;
 
 	// int[]  radixMulti(int [] a) {
 	// 	// 1-5 digit radixSort of : a[]
@@ -166,9 +167,10 @@ class Sekvensiell{
 		OppgB[] array = new OppgB[cores];
 
 	    int[] allcount= new int[mask+1];
-		dobbelArray=new int[cores][slutt];
+		dobbelArray=new int[cores][mask+1];
 		for (int w =0; w < cores; w++) {
-			array[w]= new OppgB(w, start, slutt, a, dobbelArray, shift, mask);
+			// dobbelArray[w]=new int[slutt-start];
+			array[w]= new OppgB(w, start, slutt, a, dobbelArray, shift, mask, n, allcount);
 			// System.out.println("index: " + w + " start: " + start + " stopp: " + slutt);
 			array[w].start();
 			start=slutt;
@@ -187,7 +189,7 @@ class Sekvensiell{
 		//count all instences and put in count
 		for (int i=0;i<count.length ;i++ ) {
 			for (int w =0; w < cores; w++) {
-				count[i]+=dobbelArray[w][i];
+				count[i]+=dobbelArray[w][i]; // out of bound
 			}
 		}
 		// c) Add up in 'count' - accumulated values
@@ -204,22 +206,18 @@ class Sekvensiell{
 		// debug print av hele count. burde vere i stigende rekkefolge.
 
 		// d) move numbers in sorted order a to b
-		// for (int i = 0; i < n; i++) {
-		// 	b[count[(a[i]>>>shift) & mask]++] = a[i];
-		// }
-
-		// int nr=n/cores;
-		// int rest= n%cores;
-		// int start=0, slutt=nr+rest;
-		Traad[] array2 = new Traad[cores];
-		int[][] dobbelSort=new int[cores][n];
-		for (int w =0; w < cores; w++) {
-			array2[w]= new Traad(this, a, dobbelSort, start, slutt, count, shift, mask);
-			array2[w].start();
-			start=slutt;
-			slutt=start+nr;
+		for (int i = 0; i < n; i++) {
+			b[count[(a[i]>>>shift) & mask]++] = a[i];
 		}
-		for(Traad e: array2){
+
+
+		//TODO D://
+		for (int w =0; w < cores; w++) {
+			array[w].oppgD();
+		}
+
+		//venter pa synkroniseringen
+		for(OppgB e: array){
 			try{
 				e.join();
 			}catch(Exception y){
@@ -231,9 +229,14 @@ class Sekvensiell{
 
 	}// end radixSort
 
+	// synchronized void settSammen(int index, int[] b){
+	//
+	// }
+
 
 	void testSort(int [] a){
 		for (int i = 0; i< a.length-1;i++) {
+			// System.out.println(a[i]);
 			if (a[i] > a[i+1]){
 				System.out.println("SorteringsFEIL pa plass: "+i +" a["+i+"]:"+a[i]+" > a["+(i+1)+"]:"+a[i+1]);
 				return;
