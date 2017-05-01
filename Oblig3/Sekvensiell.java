@@ -142,7 +142,7 @@ class Sekvensiell{
 		  }
 
 		  double tid = (System.nanoTime() -tt)/(double)1000000.0;
-		  System.out.println("\nSorterte "+n+" tall paa:" + tid + "millisek.");
+		  System.out.println("\nSorterte "+ n +" tall paa:" + tid + "millisek.");
 		  System.out.println("Speedup for n=" + n + " Speedup: " + (sekvtid/tid));
 
 		  testSort(a);
@@ -150,6 +150,7 @@ class Sekvensiell{
 	 } // end radixMulti
 
 	int[][] dobbelArray;
+	int[][] gammelCount;
 
 	void radixSort ( int [] a, int [] b, int maskLen, int shift){
 		// System.out.println(" radixSort maskLen:"+maskLen+", shift :"+shift);
@@ -166,11 +167,12 @@ class Sekvensiell{
 		int start=0, slutt=nr+n%cores;
 		OppgB[] array = new OppgB[cores];
 
-	    int[] allcount= new int[mask+1];
+	    // int[] allcount= new int[mask+1];
 		dobbelArray=new int[cores][mask+1];
+		gammelCount=new int[cores][mask+1];
 		for (int w =0; w < cores; w++) {
 			// dobbelArray[w]=new int[slutt-start];
-			array[w]= new OppgB(w, start, slutt, a, dobbelArray, shift, mask, n, allcount);
+			array[w]= new OppgB(w, start, slutt, a, dobbelArray, shift, mask, gammelCount, count, b);
 			// System.out.println("index: " + w + " start: " + start + " stopp: " + slutt);
 			array[w].start();
 			start=slutt;
@@ -189,9 +191,12 @@ class Sekvensiell{
 		//count all instences and put in count
 		for (int i=0;i<count.length ;i++ ) {
 			for (int w =0; w < cores; w++) {
-				count[i]+=dobbelArray[w][i]; // out of bound
+				count[i]+=dobbelArray[w][i];
 			}
 		}
+
+
+
 		// c) Add up in 'count' - accumulated values
 		// for (int i = 0; i <= mask; i++){
 		// 	j = count[i];
@@ -206,9 +211,9 @@ class Sekvensiell{
 		// debug print av hele count. burde vere i stigende rekkefolge.
 
 		// d) move numbers in sorted order a to b
-		for (int i = 0; i < n; i++) {
-			b[count[(a[i]>>>shift) & mask]++] = a[i];
-		}
+		// for (int i = 0; i < n; i++) {
+		// 	b[count[(a[i]>>>shift) & mask]++] = a[i];
+		// }
 
 
 		//TODO D://
@@ -220,11 +225,11 @@ class Sekvensiell{
 		for(OppgB e: array){
 			try{
 				e.join();
+				// Thread.sleep(100);
 			}catch(Exception y){
 			}
 		}
 		//TODO:sett inn i felles array i traaden?
-
 
 
 	}// end radixSort
@@ -240,6 +245,11 @@ class Sekvensiell{
 			if (a[i] > a[i+1]){
 				System.out.println("SorteringsFEIL pa plass: "+i +" a["+i+"]:"+a[i]+" > a["+(i+1)+"]:"+a[i+1]);
 				return;
+				// try{
+				// 	Thread.sleep(100);
+				// }catch(Exception y){
+				// }
+
 			}
 		}
 	}// end simple sorteingstest
