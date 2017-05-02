@@ -1,11 +1,11 @@
 class OppgB extends Thread{
   int start, slutt, shift, mask;
   int[] count, a, bare, allcount;
-  int[][] b;
+  int[][] b, gammelCount;
   int index;
 
 
-  public OppgB(int index, int start, int slutt, int[] a, int[][] b, int shift, int mask, int n, int[] allcount){
+  public OppgB(int index, int start, int slutt, int[] a, int[][] b, int shift, int mask, int[][] gammelCount, int[] allcount, int[] bare){
     // this.count=count;
     this.index=index;
     this.start=start;
@@ -15,8 +15,9 @@ class OppgB extends Thread{
     this.slutt=slutt;
     this.a=a;
     this.b=b;
-    bare = new int[n];
+    this.bare = bare;
     this.allcount=allcount;
+    this.gammelCount=gammelCount;
   }
   public void run(){
     // System.out.println("index " + index);
@@ -24,57 +25,58 @@ class OppgB extends Thread{
     // System.out.println("Mask:" + mask + ", skift: " + shift);
 
     for (int i =start; i <slutt; i++) { //b finn allcount
-      count[(a[i]>>> shift) & mask]++;
+      count[(a[i]>>> shift) & mask]++;  //teller alle instances
 
     }
     for (int i = 0; i <= mask; i++){
+      gammelCount[index][i]=count[i];
+
 			j = count[i];
-			count[i] = acumVal;
+			b[index][i] = acumVal;
 			acumVal += j;
 		}
-    for (int i=0;i<count.length ;i++ ) {
-      b[index][i]=count[i];
-      // allcount[count[i]]++;
-    }
-
+    // for (int i=0;i<count.length ;i++ ) {
+    //   b[index][i]=count[i];
+    //   // allcount[count[i]]++;
+    // }
     // synkronisering
-
 
   }
   public void oppgD(){
         //telle opp hvor mange plasser før denne == startplass
-        int[] plasser;
+        int[] plasser=new int[mask+1];
+        for (int i=0;i<mask+1;i++ ) {
+    			for (int w =0; w < index; w++) {
+            //legge sammen sma arrays + startverdi til den forrige
+    				plasser[i]+=gammelCount[w][i];
+    			}
+          // plasser[i]+=allcount[i];
+    		}
+        // try {
+        //
+        // for (int i = 0; i < allcount.length; i++ ) {
+        //   System.out.println(i + " " + allcount[i]);
+        // }
+
+        // System.out.println("index: " + index + " start: " + start + " stopp: " + slutt);
 
 
-        // oppg D felles
         for (int i = start; i < slutt; i++) {
           int pos = ((a[i]>>>shift) & mask);
-          // if(pos >= start && pos <= slutt){
-
-    			bare[(count[pos]++)+plasser[pos]] = a[i];
-        // }
-    		}
-
-        // Sette sammen deler fra D
-
-
-
-        // for (int i = 0; i < count.length; i++) {
-        //   System.out.print(count[i] + " y ");
+            // System.out.println("Index: " + index + " a[i]: " + a[i] + " allcount[pos] " + allcount[pos] + " Plasser "+ plasser[pos]);
+            bare[allcount[pos] + plasser[pos]++] = a[i];
+            // plasser[pos]++;
 
         // }
+      }
 
+      //sekvensiell test kode
+      // if(index==1){
+      //   for (int i = 0; i < a.length; i++) {
+      //     bare[allcount[(a[i]>>>shift) & mask]++] = a[i];
+      //   }
+      // }
 
-
-
-        // for (int i =0; i <=mask; i++){ //c
-    		// 	j = count[i];
-    		// 	count[i] = acumVal;
-    		// 	acumVal += j;
-    		// }
-        // for (int i = start; i < slutt; i++) { //D
-        //   b[count[(a[i]>>>shift) & mask]++] = a[i];
-        // }
 
   }
 }
