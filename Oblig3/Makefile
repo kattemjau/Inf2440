@@ -1,6 +1,6 @@
 # kjor make ARGS="tallverdi"
 # for a endre args
-ARGS=20000
+ARGS=200000
 RAM=-Xmx16G
 
 All: compile sek
