@@ -1,11 +1,11 @@
 import java.util.*;
 import java.util.concurrent.*;
 /***********************************************************
-* Oblig 3 - sekvensiell kode, INF2440 v2017.
-*            Ifi, Uio, Arne schmos
-* for store verdier av n > 100 m, kjør (f.eks):
-*     >java -Xmx16000m MultiRadix 1000000000
-************************************************************/
+ * Oblig 3 - sekvensiell kode, INF2440 v2017.
+ *            Ifi, Uio, Arne schmos
+ * for store verdier av n > 100 m, kjør (f.eks):
+ *     >java -Xmx16000m MultiRadix 1000000000
+ ************************************************************/
 class Sekvensiell{
 	// int n;
 	volatile int[] a;
@@ -62,29 +62,29 @@ class Sekvensiell{
 		}
 		while (max >= (1L<<numBit) )numBit++; // antall binaere siffer i max
 
-	 	  // bestem antall bit i numBits sifre
-	 	  numDigits = Math.max(1, numBit/NUM_BIT);
-	 	  bit = new int[numDigits];
-	 	  int rest = (numBit%numDigits), sum =0;;
+		// bestem antall bit i numBits sifre
+		numDigits = Math.max(1, numBit/NUM_BIT);
+		bit = new int[numDigits];
+		int rest = (numBit%numDigits), sum =0;;
 
-	 	  // fordel bitene vi skal sortere paa jevnt
-	 	  for (int i = 0; i < bit.length; i++){
-	 		  bit[i] = numBit/numDigits;
-	 	      if ( rest-- > 0)  bit[i]++;
-	 	  }
+		// fordel bitene vi skal sortere paa jevnt
+		for (int i = 0; i < bit.length; i++){
+			bit[i] = numBit/numDigits;
+			if ( rest-- > 0)  bit[i]++;
+		}
 
-	 	  for (int i =0; i < bit.length; i++) {
-	 		  radixSort( a,b,bit[i],sum );    // i-te siffer fra a[] til b[]
-	 		  sum += bit[i];
-	 		  // swap arrays (pointers only)
-	 		  t = a;
-	 		  a = b;
-	 		  b = t;
-	 	  }
-	 	  if (bit.length%2 != 0 ) {
-	 		  // et odde antall sifre, kopier innhold tilbake til original a[] (nå b)
-	 		  System.arraycopy (a,0,b,0,a.length);
-	 	  }
+		for (int i =0; i < bit.length; i++) {
+			radixSort( a,b,bit[i],sum );    // i-te siffer fra a[] til b[]
+			sum += bit[i];
+			// swap arrays (pointers only)
+			t = a;
+			a = b;
+			b = t;
+		}
+		if (bit.length%2 != 0 ) {
+			// et odde antall sifre, kopier innhold tilbake til original a[] (nå b)
+			System.arraycopy (a,0,b,0,a.length);
+		}
 
 		double tid = (System.nanoTime() -tt)/(double)1000000.0;
 		System.out.println("\nSorterte "+n+" tall paa:" + tid + "millisek.");
@@ -155,13 +155,14 @@ class Sekvensiell{
 		int nr=n/cores;
 		int start=0, slutt=nr+n%cores;
 		OppgB[] array = new OppgB[cores];
+		CyclicBarrier barrier = new CyclicBarrier(cores + 1);
 
-	    // int[] allcount= new int[mask+1];
+		// int[] allcount= new int[mask+1];
 		dobbelArray=new int[cores][mask+1];
 		gammelCount=new int[cores][mask+1];
 		for (int w =0; w < cores; w++) {
 			// dobbelArray[w]=new int[slutt-start];
-			array[w]= new OppgB(w, start, slutt, a, dobbelArray, shift, mask, gammelCount, count, b);
+			array[w]= new OppgB(w, barrier, start, slutt, a, dobbelArray, shift, mask, gammelCount, count, b);
 			// System.out.println("index: " + w + " start: " + start + " stopp: " + slutt);
 			array[w].start();
 			start=slutt;
@@ -169,13 +170,9 @@ class Sekvensiell{
 
 		}
 
-		//venter pa traader
-		for(OppgB e: array){
-			try{
-				e.join();
-			}catch(Exception y){
-			}
-		}
+		try {
+			barrier.await();
+		} catch (Exception ex) {}
 
 		//count all instences and put in count
 		for (int i=0;i<count.length ;i++ ) {
@@ -183,8 +180,6 @@ class Sekvensiell{
 				count[i]+=dobbelArray[w][i];
 			}
 		}
-
-
 
 		// c) Add up in 'count' - accumulated values
 		// for (int i = 0; i <= mask; i++){
@@ -207,7 +202,7 @@ class Sekvensiell{
 
 		//TODO D://
 		for (int w =0; w < cores; w++) {
-			array[w].oppgD();
+			array[w].startD();
 		}
 
 		//venter pa synkroniseringen
