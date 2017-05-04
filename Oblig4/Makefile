@@ -1,5 +1,5 @@
-ARGS=1000
+ARGS=200
 RAM=-Xmx14G
 
 run:
-	clear && javac *.java && java $(RAM) Oblig4 $(ARGS)
+	clear && javac Oblig4.java && javac NPunkter17.java && javac Intlist.java && java $(RAM) Oblig4 $(ARGS)
