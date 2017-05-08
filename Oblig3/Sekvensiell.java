@@ -1,10 +1,10 @@
 import java.util.*;
 import java.util.concurrent.*;
 /***********************************************************
- * Oblig 3 - sekvensiell kode, INF2440 v2017.
- *            Ifi, Uio, Arne schmos
+ * Oblig 3 - Parralell kode, INF2440 v2017.
+ *            Ifi, Uio, Sindre Hovland
  * for store verdier av n > 100 m, kjør (f.eks):
- *     >java -Xmx16000m MultiRadix 1000000000
+ *     >Make RAM=-Xmx32G ARGS=1000000000
  ************************************************************/
 class Sekvensiell{
 	// int n;
@@ -82,7 +82,6 @@ class Sekvensiell{
 			b = t;
 		}
 		if (bit.length%2 != 0 ) {
-			// et odde antall sifre, kopier innhold tilbake til original a[] (nå b)
 			System.arraycopy (a,0,b,0,a.length);
 		}
 
@@ -91,52 +90,7 @@ class Sekvensiell{
 		System.out.println("Speedup for n=" + n + " Speedup: " + (sekvtid/tid));
 		testSort(a);
 		return a;
-	} // end radixMulti
-
-	// int[] radixMulti(int [] a) {
-	// 	  // 1-5 digit radixSort of : a[]
-	// 	  int max = a[0], numBit = 2, numDigits, n =a.length;
-	// 	  int [] bit ;
-	// 	  long tt = System.nanoTime();
-	//
-	// 	 // a) finn max verdi i a[]
-	// 	  for (int i = 1 ; i < n ; i++)
-	// 		   if (a[i] > max) max = a[i];
-	// 	  while (max >= (1L<<numBit) )numBit++; // antall binaere siffer i max
-	//
-	// 	  // bestem antall bit i numBits sifre
-	// 	  numDigits = Math.max(1, numBit/NUM_BIT);
-	// 	  bit = new int[numDigits];
-	// 	  int rest = (numBit%numDigits), sum =0;;
-	//
-	// 	  // fordel bitene vi skal sortere paa jevnt
-	// 	  for (int i = 0; i < bit.length; i++){
-	// 		  bit[i] = numBit/numDigits;
-	// 	      if ( rest-- > 0)  bit[i]++;
-	// 	  }
-	//
-	// 	  int[] t=a, b = new int[n];
-	//
-	// 	  for (int i =0; i < bit.length; i++) {
-	// 		  radixSort( a,b,bit[i],sum );    // i-te siffer fra a[] til b[]
-	// 		  sum += bit[i];
-	// 		  // swap arrays (pointers only)
-	// 		  t = a;
-	// 		  a = b;
-	// 		  b = t;
-	// 	  }
-	// 	  if (bit.length%2 != 0 ) {
-	// 		  // et odde antall sifre, kopier innhold tilbake til original a[] (nå b)
-	// 		  System.arraycopy (a,0,b,0,a.length);
-	// 	  }
-	//
-	// 	  double tid = (System.nanoTime() -tt)/(double)1000000.0;
-	// 	  System.out.println("\nSorterte "+ n +" tall paa:" + tid + "millisek.");
-	// 	  System.out.println("Speedup for n=" + n + " Speedup: " + (sekvtid/tid));
-	//
-	// 	  testSort(a);
-	// 	  return a;
-	//  } // end radixMulti
+	}
 
 	int[][] dobbelArray;
 	int[][] gammelCount;
@@ -146,11 +100,6 @@ class Sekvensiell{
 		int  acumVal = 0, j, n = a.length;
 		int mask = (1<<maskLen) -1;
 		int[] count = new int [mask+1];
-
-		// b) count=the frequency of each radix value in a
-		// for (int i = 0; i < n; i++) {
-		// 	count[(a[i]>>> shift) & mask]++;
-		// }
 
 		int nr=n/cores;
 		int start=0, slutt=nr+n%cores;
@@ -181,26 +130,6 @@ class Sekvensiell{
 			}
 		}
 
-		// c) Add up in 'count' - accumulated values
-		// for (int i = 0; i <= mask; i++){
-		// 	j = count[i];
-		// 	count[i] = acumVal;
-		// 	acumVal += j;
-		// }
-		//prints count
-		// for (int i = 0; i < count.length; i++) {
-		// 	System.out.print(count[i] + " ");
-
-		// }
-		// debug print av hele count. burde vere i stigende rekkefolge.
-
-		// d) move numbers in sorted order a to b
-		// for (int i = 0; i < n; i++) {
-		// 	b[count[(a[i]>>>shift) & mask]++] = a[i];
-		// }
-
-
-		//TODO D://
 		for (int w =0; w < cores; w++) {
 			array[w].startD();
 		}
@@ -213,26 +142,17 @@ class Sekvensiell{
 			}catch(Exception y){
 			}
 		}
-		//TODO:sett inn i felles array i traaden?
 
 
 	}// end radixSort
 
-	// synchronized void settSammen(int index, int[] b){
-	//
-	// }
 
 
 	void testSort(int [] a){
 		for (int i = 0; i< a.length-1;i++) {
-			// System.out.println(a[i]);
 			if (a[i] > a[i+1]){
 				System.out.println("SorteringsFEIL pa plass: "+i +" a["+i+"]:"+a[i]+" > a["+(i+1)+"]:"+a[i+1]);
 				return;
-				// try{
-				// 	Thread.sleep(100);
-				// }catch(Exception y){
-				// }
 
 			}
 		}
