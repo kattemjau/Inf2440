@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 class Oblig4{
 	int[] x, y;
-	int cores, MAX_Y=0, MAX_X=0, MIN_X=0, n;
+	int MAX_Y=0, MAX_X=0, MIN_X=0, n;
 	IntList array;
 	public static void main(String[] args) {
 			int n = Integer.parseInt(args[0]);
@@ -12,8 +12,6 @@ class Oblig4{
 	void kul(int n){
 		//deklarerer variabler
 		this.n=n;
-		array=new IntList(n);	//opretter intlist
-		cores=Runtime.getRuntime().availableProcessors();	//setter antall procs
 		x=new int[n]; y=new int[n];
 		NPunkter17 punkter = new NPunkter17(n);	//opretter ytt objekt
 		punkter.fyllArrayer(x, y);	//fyller ut punkter
@@ -22,107 +20,56 @@ class Oblig4{
 		sekvensiell();
 		double sekvtid = (System.nanoTime() -time)/(double)1000000.0;
 		System.out.println("\nSorterte "+n+" tall paa:" + sekvtid + "millisek.");
-		display("Sekvensiell");
+		// display("Sekvensiell");	//displaying outside of timer
+
 		time = System.nanoTime();
 		parralell();
 		double tid = (System.nanoTime() -time)/(double)1000000.0;
+		// display("parralell");	//displaying outside of timer
 		System.out.println("\nSorterte "+n+" tall paa:" + tid + "millisek.");
 		System.out.println("Speedup for n=" + n + " Speedup: " + (sekvtid/tid));
 
 
 	}
 	void display(String thing){
-		System.out.print("Streker fra: ");
+		// System.out.print("Streker fra: ");
 		for(int i=0; i<array.size(); i++){
 			System.out.print(array.get(i) + " ");
 		}
+		System.out.println();
 
-		TegnUt print=new TegnUt(this, array, thing);
+		// TegnUt print=new TegnUt(this, array, thing);
 	}
 	int xmin=0, xmax=0, ymax=0, ymin=0;
 	void sekvensiell(){
+		array=new IntList(n);	//opretter intlist
 		finn();
 		MAX_X=x[xmax];
 		MIN_X=x[xmin];
 		MAX_Y=y[ymax];
 
-		System.out.println("xmax: " + xmax + " xmin: " + xmin);
+		// System.out.println("xmax: " + xmax + " xmin: " + xmin);
 		//starter med xmin til ymax
 		array.add(xmax);
-		lagStrekerPar(ymax, xmax);
+		lagStreker(ymax, xmax, 3);
+
 		array.add(ymax);
-		lagStrekerPar(xmin, ymax);
+		lagStreker(xmin, ymax, 1);
+
 		array.add(xmin);
-		lagStrekerPar(ymin, xmin);
+		lagStreker(ymin, xmin, 2);
+
 		array.add(ymin);
-		lagStrekerPar(xmax, ymin);
+		lagStreker(xmax, ymin, 4);
 		// System.out.println(strek(xmin, xmax, ymin));
 
 
 
 
-	}void lagStrekerPar(int p1, int p2){
-		// System.out.println("Sjekker for P1: " + p1 + " og P2: " + p2);
-		HashMap<Integer, Double> map = new HashMap<>();
-		for(int i=0; i<n;i++){
-			// if(x[i]<x[p2] && y[i]<y[p1]){	//endres
-				double temp=strek(p1, p2, i);
-				if(temp>=0){
-					map.put(i, temp);
-				}
-			// }
-		}
-			// finne den storste
-		double max=0;
-		int tall=0; //0 er pa linja
-		for(Integer e: map.keySet()){
-			// array.add(e);
-			if(map.get(e)>max){
-				max=map.get(e);
-				tall=e;
-			}
-		}
-		if(tall==0){
-				map.remove(p1);
-				map.remove(p2);
-				System.out.println("setter avstander");
-				// double min=0;
-				int temp=0;
-				HashMap<Integer, Double> mul = new HashMap<>();
-				for(Integer e: map.keySet()){
-					mul.put(e, avstand(p1, e));
-					// System.out.print("e ." + e);
-					// System.out.println(avstand(p1, e));
-					// min=avstand(p1, e);
-					// System.out.println("go in here?");
-					temp=e;
-				}
-
-			//sjekk om punkter ligger pa linjen
-			while(!mul.isEmpty()){
-				// temp=1;
-				System.out.println("iterrerer");
-			for(Integer e: mul.keySet()){
-				if(temp==-1)temp=e;
-				 //finn minste
-				 if(mul.get(e)>mul.get(temp)){
-					 System.out.println("fant minste");
-					//  min=mul.get(e);
-					 temp=e;
-				 }
-			}
-			// if(temp!=0)
-			array.add(temp);
-			mul.remove(temp);
-			temp=-1;
-		}
-			return;
-		}
-		lagStreker(tall, p2);
-		array.add(tall);
-		lagStreker(p1, tall);
 	}
+
 	void parralell(){
+		array=new IntList(n);	//opretter intlist
 		finn();
 		MAX_X=x[xmax];
 		MIN_X=x[xmin];
@@ -130,14 +77,39 @@ class Oblig4{
 		//STARTE TRAADER
 
 		array.add(xmax);
-		lagStreker(ymax, xmax);
-		array.add(ymax);
-		lagStreker(xmin, ymax);
-		array.add(xmin);
-		lagStreker(ymin, xmin);
-		array.add(ymin);
-		lagStreker(xmax, ymin);
+		Traad test = new Traad(ymax, xmax, array, x, y, n, 3); //skriver til array
+		test.start();
 
+		IntList array1=new IntList(n);	//opretter intlist
+		array1.add(ymax);
+		Traad test1 = new Traad(xmin, ymax, array1, x, y, n, 1); //skriver til array1
+		test1.start();
+
+		IntList array2=new IntList(n);	//opretter intlist
+		array2.add(xmin);
+		Traad test2 = new Traad(ymin, xmin, array2, x, y, n, 2); //array2
+		test2.start();
+
+		IntList array3=new IntList(n);	//opretter intlist
+		array3.add(ymin);
+		Traad test3 = new Traad(xmax, ymin, array3, x, y, n, 4); //array3
+		test3.start();
+
+		//vent paa TRAADER
+		try{
+		test.join();
+		test1.join();
+		test2.join();
+		test3.join();
+	}catch(Exception e){
+		System.out.println("error with threads");
+	}
+
+
+		//legg sammen arrays med array.append(array1);
+		array.append(array1);
+		array.append(array2);
+		array.append(array3);
 
 	}
 	void finn(){
@@ -156,16 +128,46 @@ class Oblig4{
 			}
 		}
 
-	}void lagStreker(int p1, int p2){
-		// System.out.println("Sjekker for P1: " + p1 + " og P2: " + p2);
+	}void lagStreker(int p1, int p2, int num){
+		// System.out.println("Sjekker for P1:"+p1+"("+x[p1]+","+y[p1]+")"+ " og P2: " + p2+"("+x[p2]+","+y[p2]+")");
 		HashMap<Integer, Double> map = new HashMap<>();
-		for(int i=0; i<n;i++){
-			// if(x[i]<x[p2] && y[i]<y[p1]){	//endres
-				double temp=strek(p1, p2, i);
-				if(temp>=0){
-					map.put(i, temp);
+
+		if(num==1){
+			for(int i=0; i<n;i++){
+				if(x[i]<=x[p2] && y[i]>=y[p1]){
+					double temp=strek(p1, p2, i);
+					if(temp>=0){
+						map.put(i, temp);
+					}
 				}
-			// }
+			}
+		}else if(num==2){
+			for(int i=0; i<n;i++){
+				if(x[i]<=x[p1] && y[i]<=y[p2]){
+					double temp=strek(p1, p2, i);
+					if(temp>=0){
+						map.put(i, temp);
+					}
+				}
+			}
+		}else if(num==3){
+			for(int i=0; i<n;i++){
+				if(x[i]>=x[p1] && y[i]>=y[p2]){
+					double temp=strek(p1, p2, i);
+					if(temp>=0){
+						map.put(i, temp);
+					}
+				}
+			}
+		}else if(num==4){
+			for(int i=0; i<n;i++){
+				if(x[i]>=x[p2] && y[i]<=y[p1]){
+					double temp=strek(p1, p2, i);
+					if(temp>=0){
+						map.put(i, temp);
+					}
+				}
+			}
 		}
 			// finne den storste
 		double max=0;
@@ -180,9 +182,8 @@ class Oblig4{
 		if(tall==0){
 				map.remove(p1);
 				map.remove(p2);
-				System.out.println("setter avstander");
+				// System.out.println("setter avstander");
 				// double min=0;
-				int temp=0;
 				HashMap<Integer, Double> mul = new HashMap<>();
 				for(Integer e: map.keySet()){
 					mul.put(e, avstand(p1, e));
@@ -190,18 +191,19 @@ class Oblig4{
 					// System.out.println(avstand(p1, e));
 					// min=avstand(p1, e);
 					// System.out.println("go in here?");
-					temp=e;
+					// temp=e;
 				}
 
+				int temp=-1;
 			//sjekk om punkter ligger pa linjen
 			while(!mul.isEmpty()){
 				// temp=1;
-				System.out.println("iterrerer");
+				// System.out.println("iterrerer");
 			for(Integer e: mul.keySet()){
 				if(temp==-1)temp=e;
 				 //finn minste
 				 if(mul.get(e)>mul.get(temp)){
-					 System.out.println("fant minste");
+					//  System.out.println("fant minste");
 					//  min=mul.get(e);
 					 temp=e;
 				 }
@@ -213,9 +215,9 @@ class Oblig4{
 		}
 			return;
 		}
-		lagStreker(tall, p2);
+		lagStreker(tall, p2, num);
 		array.add(tall);
-		lagStreker(p1, tall);
+		lagStreker(p1, tall, num);
 	}
 	double avstand(int p1, int p2){
 		int fk = x[p2] - x[p1];
