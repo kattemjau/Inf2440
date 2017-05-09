@@ -16,23 +16,24 @@ class Oblig4{
 		NPunkter17 punkter = new NPunkter17(n);	//opretter ytt objekt
 		punkter.fyllArrayer(x, y);	//fyller ut punkter
 
-		Long time = System.nanoTime();
-		sekvensiell();
+		Long time = System.nanoTime(); //starter tidtaking
+		sekvensiell(); 	//kjorer sekvensielle program
 		double sekvtid = (System.nanoTime() -time)/(double)1000000.0;
-		System.out.println("\nSorterte "+n+" tall paa:" + sekvtid + "millisek.");
+		System.out.println("\nSorterte "+n+" tall sekvensielt paa:" + sekvtid + "millisek.");
 		// display("Sekvensiell");	//displaying outside of timer
 
 		time = System.nanoTime();
-		parralell();
+		parralell(); //kjorer parralelle program
 		double tid = (System.nanoTime() -time)/(double)1000000.0;
+		// System.out.println("Parralellt");
 		// display("parralell");	//displaying outside of timer
-		System.out.println("\nSorterte "+n+" tall paa:" + tid + "millisek.");
+		System.out.println("Sorterte "+n+" tall parralelt paa:" + tid + "millisek.");
 		System.out.println("Speedup for n=" + n + " Speedup: " + (sekvtid/tid));
 
 
 	}
 	void display(String thing){
-		// System.out.print("Streker fra: ");
+		//printer ut resultat
 		for(int i=0; i<array.size(); i++){
 			System.out.print(array.get(i) + " ");
 		}
@@ -48,7 +49,6 @@ class Oblig4{
 		MIN_X=x[xmin];
 		MAX_Y=y[ymax];
 
-		// System.out.println("xmax: " + xmax + " xmin: " + xmin);
 		//starter med xmin til ymax
 		array.add(xmax);
 		lagStreker(ymax, xmax, 3);
@@ -61,10 +61,6 @@ class Oblig4{
 
 		array.add(ymin);
 		lagStreker(xmax, ymin, 4);
-		// System.out.println(strek(xmin, xmax, ymin));
-
-
-
 
 	}
 
@@ -74,11 +70,12 @@ class Oblig4{
 		MAX_X=x[xmax];
 		MIN_X=x[xmin];
 		MAX_Y=y[ymax];
-		//STARTE TRAADER
+
+		//STARTEr TRAADER
 
 		array.add(xmax);
-		Traad test = new Traad(ymax, xmax, array, x, y, n, 3); //skriver til array
-		test.start();
+		Traad test = new Traad(ymax, xmax, array, x, y, n, 3); //opretter traad
+		test.start();	//starter traad
 
 		IntList array1=new IntList(n);	//opretter intlist
 		array1.add(ymax);
@@ -113,6 +110,7 @@ class Oblig4{
 
 	}
 	void finn(){
+		//finner ytterpunkter og lagrer i globale verdier
 		for(int i=1; i<n;i++){
 			if(x[i]<x[xmin]){
 				xmin=i;
@@ -132,6 +130,7 @@ class Oblig4{
 		// System.out.println("Sjekker for P1:"+p1+"("+x[p1]+","+y[p1]+")"+ " og P2: " + p2+"("+x[p2]+","+y[p2]+")");
 		HashMap<Integer, Double> map = new HashMap<>();
 
+		//kjorer en sjekk for en bestemt del av oppgaven
 		if(num==1){
 			for(int i=0; i<n;i++){
 				if(x[i]<=x[p2] && y[i]>=y[p1]){
@@ -179,32 +178,19 @@ class Oblig4{
 				tall=e;
 			}
 		}
-		if(tall==0){
+		if(tall==0){ //kommer hit hvis punktet er paa linja
 				map.remove(p1);
 				map.remove(p2);
-				// System.out.println("setter avstander");
-				// double min=0;
 				HashMap<Integer, Double> mul = new HashMap<>();
-				for(Integer e: map.keySet()){
+				for(Integer e: map.keySet()){ //finner den nermeste punktet
 					mul.put(e, avstand(p1, e));
-					// System.out.print("e ." + e);
-					// System.out.println(avstand(p1, e));
-					// min=avstand(p1, e);
-					// System.out.println("go in here?");
-					// temp=e;
 				}
-
 				int temp=-1;
 			//sjekk om punkter ligger pa linjen
-			while(!mul.isEmpty()){
-				// temp=1;
-				// System.out.println("iterrerer");
+			while(!mul.isEmpty()){ //legger til alle punktene
 			for(Integer e: mul.keySet()){
 				if(temp==-1)temp=e;
-				 //finn minste
 				 if(mul.get(e)>mul.get(temp)){
-					//  System.out.println("fant minste");
-					//  min=mul.get(e);
 					 temp=e;
 				 }
 			}
@@ -219,12 +205,12 @@ class Oblig4{
 		array.add(tall);
 		lagStreker(p1, tall, num);
 	}
-	double avstand(int p1, int p2){
+	double avstand(int p1, int p2){ //finner avstanden mellom punkter
 		int fk = x[p2] - x[p1];
 		int fg = y[p2] - y[p1];
 		return Math.abs(Math.sqrt((fk*fk) + (fg*fg)));
 	}
-	double strek(int p1, int p2, int p3){
+	double strek(int p1, int p2, int p3){ //finner avstander mellom linje og punkter
 		int a=0, b=0, c=0;
 		//finn funksjonen for linje
 		// fra p1 til p2
@@ -233,7 +219,7 @@ class Oblig4{
 		c=(y[p2]*x[p1]) - (y[p1]*x[p2]);
 		return avstand(a, b, c, p3);
 
-	}double avstand(int a, int b, int c, int p3){
+	}double avstand(int a, int b, int c, int p3){ //finner avstander mellom linje og punkter
 		return ((((double)a * (double)x[p3]) + ((double)b * (double)y[p3]) + (double)c)/ (double)Math.sqrt((a * a) + (b * b)));
 	}
 
